@@ -1229,6 +1229,85 @@ h1 {
   border-top: 1px solid var(--hairline);
 }
 
+.formulation-story {
+  width: min(1400px, calc(100% - 64px));
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 7rem) 0;
+  border-top: 1px solid var(--hairline);
+}
+.formulation-heading {
+  display: grid;
+  grid-template-columns: minmax(17rem, .8fr) minmax(24rem, 1.2fr);
+  gap: clamp(2rem, 7vw, 8rem);
+  align-items: baseline;
+  margin-bottom: 2.4rem;
+}
+.formulation-heading h2,
+.formulation-heading p,
+.formulation-chain p,
+.formulation-chain h3,
+.formulation-panel h3,
+.formulation-panel p,
+.formulation-panel dl,
+.formulation-source { margin: 0; }
+.formulation-heading h2 { font: 400 clamp(2rem, 3.3vw, 2.7rem)/1.05 "Latin Modern Roman", Georgia, serif; }
+.formulation-heading p { max-width: 41rem; color: var(--muted); font-size: .95rem; }
+.formulation-heading code,
+.formulation-source code { color: var(--ink); font: inherit; }
+
+.formulation-chain {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(10rem, 1fr) 1rem) minmax(10rem, 1fr);
+  align-items: center;
+  gap: .55rem;
+  padding: 1rem 0 2.5rem;
+}
+.formulation-chain article { min-width: 0; min-height: 7.4rem; padding-top: .6rem; border-top: 1px solid var(--ink); }
+.formulation-chain h3,
+.formulation-panel h3 { font: 400 1.05rem/1.2 "Latin Modern Roman", Georgia, serif; }
+.formulation-chain > i { color: var(--construction); font: normal 1rem/1 Inter, sans-serif; text-align: center; }
+.formulation-chain small,
+.formulation-panel header small { color: var(--muted); font-size: .66rem; }
+.math-line { font: 400 .9rem/1.35 "Latin Modern Roman", Georgia, serif; }
+.formulation-chain .math-line { padding-top: .65rem; }
+.formulation-chain .math-line + .math-line { padding-top: 0; }
+.formulation-chain article small { display: block; padding-top: .6rem; }
+
+.formulation-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(2.5rem, 5vw, 5rem); }
+.formulation-panel { min-width: 0; padding-top: .65rem; border-top: 1px solid var(--ink); }
+.formulation-panel header { display: block; margin-bottom: 1.1rem; }
+.formulation-panel header small { display: block; padding-top: .2rem; }
+.dynamics-equations { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); gap: 2rem; font: 400 .82rem/1.55 "Latin Modern Roman", Georgia, serif; }
+.dynamics-equations p + p { margin-top: .22rem; }
+.dynamics-equations .dynamics-note,
+.formulation-explainer,
+.constraint-note { color: var(--muted); font: .72rem/1.45 Inter, ui-sans-serif, sans-serif; }
+.dynamics-equations .dynamics-note { margin-top: 1rem; max-width: 23rem; }
+.problem-equation { padding: .25rem 0 1rem; font: 400 1.18rem/1.6 "Latin Modern Roman", Georgia, serif; }
+.problem-equation span { display: inline-block; width: 5.5rem; color: var(--muted); font: .66rem/1 Inter, sans-serif; }
+.motion-cost { padding-bottom: 1rem; }
+.formulation-explainer { max-width: 39rem; }
+.formulation-panel dl > div { display: grid; grid-template-columns: 6.2rem 1fr; gap: 1rem; padding: .46rem 0; border-bottom: 1px solid var(--hairline); }
+.formulation-panel dt { color: var(--muted); font-size: .68rem; }
+.formulation-panel dd { margin: 0; font: 400 .82rem/1.35 "Latin Modern Roman", Georgia, serif; }
+.constraint-note { margin-top: .85rem !important; }
+.belief-identities { padding-top: .8rem; font: 400 .78rem/1.45 "Latin Modern Roman", Georgia, serif; }
+.belief-identities p + p { margin-top: .18rem; }
+.formulation-source { padding-top: 1.35rem; color: var(--muted); font-size: .66rem; }
+
+@media (max-width: 960px) {
+  .formulation-chain { grid-template-columns: 1fr; gap: 0; }
+  .formulation-chain > i { height: 1.25rem; transform: rotate(90deg); }
+  .formulation-chain article { min-height: 0; padding-bottom: .8rem; }
+}
+
+@media (max-width: 780px) {
+  .formulation-story { width: min(100% - 32px, 1400px); }
+  .formulation-heading { grid-template-columns: 1fr; gap: .75rem; }
+  .formulation-grid { grid-template-columns: 1fr; }
+  .dynamics-equations { grid-template-columns: 1fr; gap: .4rem; }
+}
+
 .validation-heading {
   display: grid;
   grid-template-columns: minmax(17rem, .85fr) minmax(20rem, 1.15fr);

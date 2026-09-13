@@ -9,7 +9,7 @@ from pathlib import Path
 import numpy as np
 
 
-DEFAULT_SOURCE = Path("../gramian-acados/Ryan/monte_carlo_full_information_hard_fov_sola/centre")
+DEFAULT_SOURCE = Path("../gramian-acados/Ryan/monte_carlo_report_landmark_results_sola/centre")
 
 
 def rounded(values):
@@ -47,7 +47,7 @@ def main():
         })
 
     payload = {
-        "source": "Ryan/monte_carlo_full_information_hard_fov_sola/centre",
+        "source": "Ryan/monte_carlo_report_landmark_results_sola/centre",
         "trials": 200,
         "geometry": "centred landmark",
         "horizon": float(histories["times"][-1]),

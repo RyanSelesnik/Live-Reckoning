@@ -6,19 +6,19 @@
     <meta name="description" content="Estimation-aware trajectory optimisation for visual-inertial navigation.">
     <meta name="theme-color" content="#ffffff">
     <title>Live Reckoning</title>
-    <link rel="stylesheet" href="styles.css?v=20260913-monte-carlo">
+    <link rel="stylesheet" href="styles.css?v=20260913-formulation-2">
     <script src="motion-data.js" defer></script>
     <script src="chase-data.js" defer></script>
-    <script src="optimization-data.js" defer></script>
-    <script src="monte-carlo-data.js" defer></script>
+    <script src="optimization-data.js?v=20260913-formulation-2" defer></script>
+    <script src="monte-carlo-data.js?v=20260913-formulation-2" defer></script>
     <script src="diagram.js" defer></script>
     <script src="uncertainty-triangle.js" defer></script>
     <script src="dead-reckoning.js" defer></script>
     <script src="feature-correspondence.js" defer></script>
     <script src="vendor/three.min.js" defer></script>
     <script src="chase-view.js" defer></script>
-    <script src="optimization-view.js" defer></script>
-    <script src="monte-carlo-view.js" defer></script>
+    <script src="optimization-view.js?v=20260913-formulation-2" defer></script>
+    <script src="monte-carlo-view.js?v=20260913-formulation-2" defer></script>
   </head>
   <body>
     <header class="site-header">
@@ -322,7 +322,7 @@
       <section class="optimizer-story" aria-labelledby="optimizer-title">
         <header class="optimizer-heading">
           <h2 id="optimizer-title">What the optimizer sees</h2>
-          <p>Two saved families of five-second plans toward fixed landmarks. More permitted motion changes the viewpoint, image projection, and predicted uncertainty.</p>
+          <p>The current five-second constrained plans from <code>run_landmark_experiment_simple.py</code>. More permitted motion changes the viewpoint, image projection, and predicted uncertainty.</p>
         </header>
 
         <div class="optimizer-settings">
@@ -366,7 +366,105 @@
           </div>
         </div>
 
-        <p class="optimizer-note"><span>predicted mean = nominal plan; covariance changes</span> Stored hard-FoV centred and left-landmark sweeps. The controls select solved trajectories; they do not interpolate between solutions or rerun OpenVINS.</p>
+        <p class="optimizer-note"><span>predicted mean = nominal plan; covariance changes</span> Stored centred and left-landmark sweeps from the current report experiment. The controls select solved trajectories; they do not interpolate or rerun the optimiser.</p>
+      </section>
+
+      <section class="formulation-story" aria-labelledby="formulation-title">
+        <header class="formulation-heading">
+          <h2 id="formulation-title">The problem, as solved</h2>
+          <p>The equations and limits below come from the current Python implementation. The optimisation acts on flat outputs; a differential-flatness lift supplies the physical quantities used by the estimator model.</p>
+        </header>
+
+        <div class="formulation-chain" aria-label="Computation from trajectory to estimation objective">
+          <article>
+            <h3>plan</h3>
+            <p class="math-line"><b>X</b><sub>k</sub> = (p, v, a, j, ψ, r)</p>
+            <p class="math-line"><b>U</b><sub>k</sub> = (s, α)</p>
+            <small>horizontal flat outputs</small>
+          </article>
+          <i aria-hidden="true">→</i>
+          <article>
+            <h3>lift</h3>
+            <p class="math-line">(a, j, ψ, r) ↦ (R<sub>WB</sub>, f<sub>B</sub>, ω<sub>B</sub>)</p>
+            <small>quadrotor differential flatness</small>
+          </article>
+          <i aria-hidden="true">→</i>
+          <article>
+            <h3>predict</h3>
+            <p class="math-line">P<sup>−</sup> = F<sub>d</sub>P<sup>+</sup>F<sub>d</sub><sup>T</sup> + Q<sub>d</sub></p>
+            <small>inertial error propagation</small>
+          </article>
+          <i aria-hidden="true">→</i>
+          <article>
+            <h3>observe</h3>
+            <p class="math-line">P<sup>+</sup> = P<sup>−</sup> − P<sup>−</sup>H<sup>T</sup>S<sup>−1</sup>HP<sup>−</sup></p>
+            <small>one accepted camera update</small>
+          </article>
+          <i aria-hidden="true">→</i>
+          <article>
+            <h3>score</h3>
+            <p class="math-line">J<sub>P</sub> = Σ<sub>k=1</sub><sup>50</sup>(P<sub>xx,k</sub><sup>+</sup> + P<sub>yy,k</sub><sup>+</sup>)</p>
+            <small>predicted horizontal MSE</small>
+          </article>
+        </div>
+
+        <div class="formulation-grid">
+          <article class="formulation-panel formulation-dynamics">
+            <header><h3>Exact knot dynamics</h3><small>h = 0.1 s · 50 intervals · z = 1 m</small></header>
+            <div class="dynamics-equations">
+              <div>
+                <p>p<sub>k+1</sub> = p<sub>k</sub> + hv<sub>k</sub> + ½h²a<sub>k</sub> + ⅙h³j<sub>k</sub> + ¹⁄₂₄h⁴s<sub>k</sub></p>
+                <p>v<sub>k+1</sub> = v<sub>k</sub> + ha<sub>k</sub> + ½h²j<sub>k</sub> + ⅙h³s<sub>k</sub></p>
+                <p>a<sub>k+1</sub> = a<sub>k</sub> + hj<sub>k</sub> + ½h²s<sub>k</sub></p>
+                <p>j<sub>k+1</sub> = j<sub>k</sub> + hs<sub>k</sub></p>
+              </div>
+              <div>
+                <p>ψ<sub>k+1</sub> = ψ<sub>k</sub> + hr<sub>k</sub> + ½h²α<sub>k</sub></p>
+                <p>r<sub>k+1</sub> = r<sub>k</sub> + hα<sub>k</sub></p>
+                <p class="dynamics-note">Snap s and yaw acceleration α are constant inside each interval, so these discrete dynamics are exact.</p>
+              </div>
+            </div>
+          </article>
+
+          <article class="formulation-panel formulation-problem">
+            <header><h3>Estimation-aware programme</h3><small>CasADi · IPOPT · warm-started continuation</small></header>
+            <div class="problem-equation">
+              <p><span>minimise</span> J<sub>P</sub>(<b>X</b>, <b>U</b>)</p>
+              <p><span>subject to</span> J<sub>motion</sub> ≤ (1 + ε)J<sub>motion</sub><sup>⋆</sup></p>
+            </div>
+            <p class="math-line motion-cost">J<sub>motion</sub> = hΣ (‖s<sub>k</sub>‖² + 0.1α<sub>k</sub>²)</p>
+            <p class="formulation-explainer">J<sub>motion</sub><sup>⋆</sup> is solved first. ε then grants a relative motion budget; there is no arbitrary covariance–motion weighting and no prescribed lateral waypoint or parallax reward.</p>
+          </article>
+
+          <article class="formulation-panel formulation-constraints">
+            <header><h3>Enforced constraints</h3><small>componentwise at shooting knots</small></header>
+            <dl>
+              <div><dt>boundary</dt><dd>(0, 0) → (10, 0) m; start and finish at rest</dd></div>
+              <div><dt>translation</dt><dd>|v| ≤ 5 m/s · |a| ≤ 3 m/s² · |j| ≤ 4 m/s³</dd></div>
+              <div><dt>heading</dt><dd>|ψ| ≤ 45° · |r| ≤ 60°/s · |α| ≤ 20°/s²</dd></div>
+              <div><dt>camera</dt><dd>Z<sub>C</sub> ≥ 0.1 m · 1 ≤ u ≤ 639 · 1 ≤ v ≤ 479 px</dd></div>
+            </dl>
+            <p class="constraint-note">Not directly constrained: snap, rotor thrust, body torque, actuator dynamics, or tracking error.</p>
+          </article>
+
+          <article class="formulation-panel formulation-belief">
+            <header><h3>Belief-model assumptions</h3><small>18-state covariance for one landmark</small></header>
+            <dl>
+              <div><dt>state error</dt><dd>δp, δv, δθ, δb<sub>a</sub>, δb<sub>g</sub>, δℓ</dd></div>
+              <div><dt>timing</dt><dd>midpoint inertial linearisation and one correction every 0.1 s</dd></div>
+              <div><dt>measurement</dt><dd>calibrated 640 × 480 pinhole camera; σ = 1 px</dd></div>
+              <div><dt>future data</dt><dd>zero-innovation MLO; the supplied landmark is accepted at every epoch</dd></div>
+            </dl>
+            <div class="belief-identities">
+              <p>δẋ<sub>I</sub> = F<sub>c</sub>δx<sub>I</sub> + Gn</p>
+              <p>F<sub>d</sub> ≈ I + A + ½A², &nbsp; A = F<sub>c</sub>h, &nbsp; Q<sub>d</sub> ≈ Q̄h</p>
+              <p>p<sub>ℓ</sub><sup>C</sup> = R<sub>CB</sub>R<sub>WB</sub><sup>T</sup>(ℓ<sup>W</sup> − p<sub>WB</sub><sup>W</sup>) + t<sub>CB</sub>, &nbsp; z = π(p<sub>ℓ</sub><sup>C</sup>)</p>
+            </div>
+            <p class="constraint-note">The optimiser predicts covariance. It does not model feature discovery, association, rejection, or OpenVINS internally.</p>
+          </article>
+        </div>
+
+        <p class="formulation-source">Implemented in <code>trajectory.py</code>, <code>optimisation.py</code>, <code>belief.py</code>, and the explicit limits in <code>run_landmark_experiment_simple.py</code>.</p>
       </section>
 
       <section class="validation-story" aria-labelledby="validation-title">
