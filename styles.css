@@ -886,6 +886,12 @@ h1 {
   font-size: 28px;
 }
 
+.sensor-equation .sub,
+.force-label .sub {
+  baseline-shift: -18%;
+  font-size: 62%;
+}
+
 .signal-path {
   stroke: var(--blue);
   stroke-width: 1.9;
