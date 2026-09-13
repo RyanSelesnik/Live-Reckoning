@@ -26,8 +26,10 @@
   let visible = true;
   let lastMessage = "";
 
-  truePath.style.strokeDasharray = trueLength;
-  estimatePath.style.strokeDasharray = estimateLength;
+  // Normalize dash lengths to the complete path. Raw user-unit lengths wrap
+  // when vector-effect="non-scaling-stroke" is rendered at a different scale.
+  truePath.style.strokeDasharray = "1 1";
+  estimatePath.style.strokeDasharray = "1 1";
 
   function clamp(value, min = 0, max = 1) {
     return Math.max(min, Math.min(max, value));
@@ -120,8 +122,8 @@
     const correctedEstimate = mixPoint(rawEstimate, truePoint, correction);
     const uncertaintyScale = Math.max(0.15, travel * (1 - 0.72 * correction));
 
-    truePath.style.strokeDashoffset = trueLength * (1 - travel);
-    estimatePath.style.strokeDashoffset = estimateLength * (1 - travel);
+    truePath.style.strokeDashoffset = 1 - travel;
+    estimatePath.style.strokeDashoffset = 1 - travel;
     ribbon.setAttribute("d", ribbonFor(travel, 1 - 0.58 * correction));
     drawSteps(travel);
 
