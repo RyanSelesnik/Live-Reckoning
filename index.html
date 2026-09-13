@@ -10,6 +10,7 @@
     <script src="motion-data.js" defer></script>
     <script src="chase-data.js" defer></script>
     <script src="optimization-data.js" defer></script>
+    <script src="monte-carlo-data.js" defer></script>
     <script src="diagram.js" defer></script>
     <script src="uncertainty-triangle.js" defer></script>
     <script src="dead-reckoning.js" defer></script>
@@ -17,6 +18,7 @@
     <script src="vendor/three.min.js" defer></script>
     <script src="chase-view.js" defer></script>
     <script src="optimization-view.js" defer></script>
+    <script src="monte-carlo-view.js" defer></script>
   </head>
   <body>
     <header class="site-header">
@@ -365,6 +367,41 @@
         </div>
 
         <p class="optimizer-note"><span>predicted mean = nominal plan; covariance changes</span> Stored hard-FoV centred and left-landmark sweeps. The controls select solved trajectories; they do not interpolate between solutions or rerun OpenVINS.</p>
+      </section>
+
+      <section class="validation-story" aria-labelledby="validation-title">
+        <header class="validation-heading">
+          <h2 id="validation-title">Does the prediction survive noise?</h2>
+          <p>Centred landmark. Two hundred nonlinear EKF trials test the covariance predicted during planning.</p>
+        </header>
+
+        <div class="validation-cases" role="group" aria-label="Evaluated motion allowances">
+          <span>motion allowance</span>
+          <button type="button" data-validation-case="0" aria-pressed="false">0</button>
+          <button type="button" data-validation-case="1" aria-pressed="false">0.1</button>
+          <button type="button" data-validation-case="2" aria-pressed="false">1</button>
+          <button type="button" data-validation-case="3" aria-pressed="false">2</button>
+          <button type="button" data-validation-case="4" aria-pressed="true">3</button>
+        </div>
+
+        <div class="validation-layout">
+          <figure class="validation-panel validation-mse-panel">
+            <figcaption>
+              <span>realised error against prediction</span>
+              <strong id="validation-reduction">90% lower MSE</strong>
+            </figcaption>
+            <svg id="validation-mse" viewBox="0 0 760 300" role="img" aria-label="Monte Carlo horizontal mean squared error and predicted covariance over time"></svg>
+          </figure>
+          <figure class="validation-panel validation-nees-panel">
+            <figcaption>
+              <span>filter consistency</span>
+              <strong id="validation-nees-value">mean NEES 2.05</strong>
+            </figcaption>
+            <svg id="validation-nees" viewBox="0 0 430 300" role="img" aria-label="Mean horizontal NEES over time with expected value two"></svg>
+          </figure>
+        </div>
+
+        <p class="validation-note"><span><i class="validation-key realised"></i>200-trial MSE <i class="validation-key predicted"></i>planning covariance</span> Same simulated noise draws compare the saved plans fairly. This validates the reduced planning model, not OpenVINS.</p>
       </section>
     </main>
   </body>
