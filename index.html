@@ -320,8 +320,22 @@
       <section class="optimizer-story" aria-labelledby="optimizer-title">
         <header class="optimizer-heading">
           <h2 id="optimizer-title">What the optimizer sees</h2>
-          <p>A saved family of five-second plans toward one fixed, frontal landmark. More permitted motion changes the viewpoint—and the predicted uncertainty.</p>
+          <p>Two saved families of five-second plans toward fixed landmarks. More permitted motion changes the viewpoint, image projection, and predicted uncertainty.</p>
         </header>
+
+        <div class="optimizer-settings">
+          <div class="optimizer-modes" aria-label="Landmark geometry">
+            <span>landmark</span>
+            <button type="button" data-optimizer-mode="centre" aria-pressed="true">centred</button>
+            <button type="button" data-optimizer-mode="image_left" aria-pressed="false">left</button>
+            <button type="button" data-optimizer-mode="both" aria-pressed="false">both</button>
+          </div>
+          <div class="optimizer-playback">
+            <button id="optimizer-play" type="button">Pause</button>
+            <input id="optimizer-time" type="range" min="0" max="5" step="0.01" value="0" aria-label="Trajectory time">
+            <output id="optimizer-time-value" for="optimizer-time">0.0 s</output>
+          </div>
+        </div>
 
         <div class="optimizer-control">
           <label for="optimizer-allowance">motion allowance</label>
@@ -331,8 +345,12 @@
 
         <div class="optimizer-layout">
           <figure class="optimizer-panel optimizer-motion-panel">
-            <figcaption><span>candidate motion</span><small>sightlines at 1 s intervals</small></figcaption>
-            <svg id="optimizer-trajectory" viewBox="0 0 720 380" role="img" aria-label="Saved candidate trajectory and viewing rays to the front landmark"></svg>
+            <figcaption><span>candidate motion</span><small>current sightline</small></figcaption>
+            <svg id="optimizer-trajectory" viewBox="0 0 650 370" role="img" aria-label="Saved candidate trajectory, current vehicle, and viewing ray"></svg>
+          </figure>
+          <figure class="optimizer-panel optimizer-image-panel">
+            <figcaption><span>image plane</span><small>projected landmark</small></figcaption>
+            <svg id="optimizer-image" viewBox="0 0 470 370" role="img" aria-label="Calibrated pixel projection over trajectory time"></svg>
           </figure>
           <div class="optimizer-rollouts">
             <figure class="optimizer-panel">
@@ -346,7 +364,7 @@
           </div>
         </div>
 
-        <p class="optimizer-note"><span>predicted mean = nominal plan; covariance changes</span> Stored hard-FoV centre-landmark sweep. The slider selects solved trajectories; it does not interpolate or rerun OpenVINS.</p>
+        <p class="optimizer-note"><span>predicted mean = nominal plan; covariance changes</span> Stored hard-FoV centred and left-landmark sweeps. The controls select solved trajectories; they do not interpolate between solutions or rerun OpenVINS.</p>
       </section>
     </main>
   </body>
