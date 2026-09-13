@@ -26,10 +26,12 @@
   let visible = true;
   let lastMessage = "";
 
-  // Normalize dash lengths to the complete path. Raw user-unit lengths wrap
-  // when vector-effect="non-scaling-stroke" is rendered at a different scale.
-  truePath.style.strokeDasharray = "1 1";
-  estimatePath.style.strokeDasharray = "1 1";
+  // Reveal from the path origin. A shifted full-length dash can wrap and show
+  // the far end of the curve while progress is still zero.
+  truePath.style.strokeDasharray = "0 1";
+  estimatePath.style.strokeDasharray = "0 1";
+  truePath.style.strokeDashoffset = "0";
+  estimatePath.style.strokeDashoffset = "0";
 
   function clamp(value, min = 0, max = 1) {
     return Math.max(min, Math.min(max, value));
@@ -122,8 +124,10 @@
     const correctedEstimate = mixPoint(rawEstimate, truePoint, correction);
     const uncertaintyScale = Math.max(0.15, travel * (1 - 0.72 * correction));
 
-    truePath.style.strokeDashoffset = 1 - travel;
-    estimatePath.style.strokeDashoffset = 1 - travel;
+    truePath.style.strokeDasharray = `${travel} 1`;
+    estimatePath.style.strokeDasharray = `${travel} 1`;
+    truePath.style.opacity = travel > 0.001 ? 1 : 0;
+    estimatePath.style.opacity = travel > 0.001 ? 1 : 0;
     ribbon.setAttribute("d", ribbonFor(travel, 1 - 0.58 * correction));
     drawSteps(travel);
 
