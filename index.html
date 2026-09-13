@@ -1,10 +1,330 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Live Reckoning</title>
-</head>
-<body>
-  <h1>Live Reckoning</h1>
-  <p>Project page coming soon.</p>
-</body>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Estimation-aware trajectory optimisation for visual-inertial navigation.">
+    <meta name="theme-color" content="#ffffff">
+    <title>Live Reckoning</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="motion-data.js" defer></script>
+    <script src="chase-data.js" defer></script>
+    <script src="diagram.js" defer></script>
+    <script src="uncertainty-triangle.js" defer></script>
+    <script src="dead-reckoning.js" defer></script>
+    <script src="feature-correspondence.js" defer></script>
+    <script src="vendor/three.min.js" defer></script>
+    <script src="chase-view.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="author" href="#top" aria-label="Return to the top">Ryan Selesnik</a>
+      <p>Imperial College London</p>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <div class="hero-title-group">
+            <h1 id="hero-title">Live Reckoning</h1>
+            <p class="hero-subtitle">Moving to observe, observing to be sure.</p>
+          </div>
+          <p class="hero-description">How a quadrotor’s motion shapes visual–inertial estimation.</p>
+        </div>
+
+        <div class="diagram-frame" id="system-figure" data-focus="all">
+          <div class="diagram-tools" aria-label="Highlight a sensing path">
+            <button type="button" data-focus-button="all" aria-pressed="true">System</button>
+            <button type="button" data-focus-button="imu" aria-pressed="false">IMU</button>
+            <button type="button" data-focus-button="camera" aria-pressed="false">Camera</button>
+          </div>
+
+          <div class="diagram-scroll">
+            <svg class="system-diagram" viewBox="0 0 1500 790" role="img" aria-labelledby="diagram-title diagram-description">
+              <title id="diagram-title">Six-degree-of-freedom quadrotor with IMU and camera sensing</title>
+              <desc id="diagram-description">An abstract quadrotor free-body diagram shows measured specific force, gravity, and angular velocity about three body axes. A camera projects a world landmark into the image plane.</desc>
+
+              <defs>
+                <marker id="arrow-ink" markerWidth="8" markerHeight="8" refX="6.5" refY="4" orient="auto" markerUnits="strokeWidth">
+                  <path d="M0,0 L8,4 L0,8 Z" fill="var(--ink)" />
+                </marker>
+                <marker id="arrow-blue" markerWidth="8" markerHeight="8" refX="6.5" refY="4" orient="auto" markerUnits="strokeWidth">
+                  <path d="M0,0 L8,4 L0,8 Z" fill="var(--blue)" />
+                </marker>
+                <marker id="arrow-grey" markerWidth="8" markerHeight="8" refX="6.5" refY="4" orient="auto" markerUnits="strokeWidth">
+                  <path d="M0,0 L8,4 L0,8 Z" fill="var(--muted)" />
+                </marker>
+                <clipPath id="image-plane-clip">
+                  <path d="M954 205 L1020 225 L1020 610 L954 635 Z" />
+                </clipPath>
+              </defs>
+
+              <g class="construction-layer">
+                <path d="M82 682 H1358" />
+              </g>
+
+              <g class="world-layer" aria-label="World frame">
+                <circle cx="122" cy="638" r="4" />
+                <path class="axis" d="M122 638 H205" marker-end="url(#arrow-ink)" />
+                <path class="axis" d="M122 638 L79 592" marker-end="url(#arrow-ink)" />
+                <path class="axis" d="M122 638 V548" marker-end="url(#arrow-ink)" />
+                <text class="math" x="213" y="646">x<tspan class="sub">W</tspan></text>
+                <text class="math" x="54" y="585">y<tspan class="sub">W</tspan></text>
+                <text class="math" x="101" y="532">z<tspan class="sub">W</tspan></text>
+                <text class="frame-label math" x="96" y="686">W</text>
+              </g>
+
+              <g class="vehicle-layer" aria-label="Quadrotor body and six degree of freedom pose">
+                <path class="pose-leader" d="M176 602 Q260 510 363 430" />
+                <text class="math pose-label" x="205" y="528">p<tspan class="super">W</tspan><tspan class="sub">WB</tspan>, R<tspan class="sub">WB</tspan></text>
+
+                <g class="quadrotor" transform="translate(420 414) rotate(-10)">
+                  <path class="arm" d="M-128 78 L128 -78" />
+                  <path class="arm" d="M-126 -76 L130 80" />
+
+                  <g transform="translate(-128 78) rotate(-13)">
+                    <ellipse class="rotor" rx="61" ry="17" />
+                  </g>
+                  <g transform="translate(128 -78) rotate(-13)">
+                    <ellipse class="rotor" rx="61" ry="17" />
+                  </g>
+                  <g transform="translate(-126 -76) rotate(13)">
+                    <ellipse class="rotor" rx="61" ry="17" />
+                  </g>
+                  <g transform="translate(130 80) rotate(13)">
+                    <ellipse class="rotor" rx="61" ry="17" />
+                  </g>
+
+                  <circle class="body" r="24" />
+                  <path class="body-quadrant" d="M0 0 V-24 A24 24 0 0 1 24 0 Z M0 0 V24 A24 24 0 0 1 -24 0 Z" />
+                  <path class="body-mark" d="M-24 0 H24 M0 -24 V24" />
+
+                  <path class="body-axis" d="M12 -4 L90 -37" marker-end="url(#arrow-blue)" />
+                  <path class="body-axis" d="M-9 -9 L-67 -55" marker-end="url(#arrow-blue)" />
+                  <text class="math axis-label" x="99" y="-38">x<tspan class="sub">B</tspan></text>
+                  <text class="math axis-label" x="-90" y="-61">y<tspan class="sub">B</tspan></text>
+
+                  <path class="specific-force" d="M0 -27 V-166" marker-end="url(#arrow-blue)" />
+                  <text class="math force-label" x="17" y="-148">f̃<tspan class="sub">B</tspan></text>
+                  <path class="body-gravity" d="M0 27 V145" transform="rotate(10)" marker-end="url(#arrow-grey)" />
+                  <text class="math gravity-label" x="17" y="133" transform="rotate(10)">g<tspan class="sub">W</tspan></text>
+
+                  <path class="rotation-dof" d="M-98 16 Q-88 -29 -47 -48" marker-end="url(#arrow-blue)" />
+                  <text class="math omega-label" x="-118" y="-17">ω̃<tspan class="sub">1</tspan></text>
+                  <path class="rotation-dof" d="M45 52 Q87 39 99 -3" marker-end="url(#arrow-blue)" />
+                  <text class="math omega-label" x="84" y="60">ω̃<tspan class="sub">2</tspan></text>
+                  <path class="rotation-dof" d="M-39 -88 Q2 -113 43 -87" marker-end="url(#arrow-blue)" />
+                  <text class="math omega-label" x="50" y="-92">ω̃<tspan class="sub">3</tspan></text>
+                </g>
+
+                <text class="section-label" x="320" y="679">six-degree-of-freedom motion</text>
+              </g>
+
+              <g class="imu-layer sensor-target" transform="translate(80 -30)" role="button" tabindex="0" aria-label="Highlight inertial measurement path" data-sensor="imu">
+                <path class="signal-path" d="M340 415 C380 315 482 221 606 168" marker-end="url(#arrow-blue)" />
+                <circle class="sensor-node" cx="340" cy="415" r="8" />
+                <text class="sensor-title" x="625" y="128">IMU</text>
+                <text class="math sensor-equation" x="625" y="174">f̃<tspan class="sub">B</tspan></text>
+                <path class="signal-trace" d="M686 166 l22 0 8 -22 15 43 11 -29 12 8 h42" />
+                <text class="math sensor-equation" x="625" y="225">ω̃<tspan class="sub">B</tspan></text>
+                <path class="signal-trace" d="M686 217 q22 -24 44 0 t44 0 t44 0" />
+                <text class="sensor-note" x="625" y="267">specific force · angular velocity</text>
+              </g>
+
+              <g class="camera-layer sensor-target" transform="translate(70 0)" role="button" tabindex="0" aria-label="Highlight camera measurement path" data-sensor="camera">
+                <g class="camera-body" transform="translate(590 454)">
+                  <path d="M-20 -18 H17 L34 -31 V31 L17 18 H-20 Z" />
+                  <circle cx="-25" cy="0" r="8" />
+                </g>
+                <path class="camera-mount" d="M376 430 L560 451" />
+                <text class="math extrinsic-label" x="498" y="414">R<tspan class="sub">CB</tspan>, t<tspan class="sub">CB</tspan></text>
+
+                <circle class="camera-centre" cx="625" cy="454" r="5" />
+                <path class="camera-axis" d="M625 454 H920" marker-end="url(#arrow-blue)" />
+                <path class="camera-axis secondary" d="M625 454 L677 416" marker-end="url(#arrow-blue)" />
+                <path class="camera-axis secondary" d="M625 454 V515" marker-end="url(#arrow-blue)" />
+                <text class="math axis-label" x="887" y="442">z<tspan class="sub">C</tspan></text>
+                <text class="math axis-label" x="686" y="407">x<tspan class="sub">C</tspan></text>
+                <text class="math axis-label" x="640" y="535">y<tspan class="sub">C</tspan></text>
+
+                <path class="frustum" d="M625 454 L954 205 M625 454 L954 635" />
+                <path class="image-plane" d="M954 205 L1020 225 L1020 610 L954 635 Z" />
+                <g clip-path="url(#image-plane-clip)">
+                  <path class="plane-rule" d="M954 264 L1020 282 M954 575 L1020 556" />
+                  <path class="plane-rule" d="M978 212 V626" />
+                </g>
+
+                <path class="measurement-ray" d="M625 454 L988 403" />
+                <path class="landmark-ray" d="M988 403 L1304 350" />
+                <circle class="projection" cx="988" cy="403" r="11" />
+                <circle class="landmark" cx="1304" cy="350" r="8" />
+
+                <path class="pixel-axis" d="M973 253 L1005 261" marker-end="url(#arrow-ink)" />
+                <path class="pixel-axis" d="M973 253 V295" marker-end="url(#arrow-ink)" />
+                <text class="math pixel-label" x="1009" y="257">u</text>
+                <text class="math pixel-label" x="979" y="316">v</text>
+                <text class="math measurement-label" x="1030" y="420">z = (u,v)</text>
+                <text class="math landmark-label" x="1322" y="363">ℓ<tspan class="super">W</tspan></text>
+                <text class="sensor-note optical-label" x="750" y="473">optical axis</text>
+                <text class="section-label" x="910" y="679">pinhole projection</text>
+              </g>
+
+              <g class="reading-order" aria-hidden="true">
+                <path d="M593 682 H922" marker-end="url(#arrow-grey)" />
+              </g>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <section class="uncertainty-story" aria-labelledby="uncertainty-title">
+        <div class="uncertainty-copy">
+          <h2 id="uncertainty-title">The uncertainty triangle, in motion.</h2>
+          <p>A controller corrects the estimated state towards the nominal path; it cannot observe truth directly. This experiment removes that control problem by prescribing the nominal motion as truth.</p>
+        </div>
+
+        <div class="uncertainty-visual" data-mode="closed-loop">
+          <div class="uncertainty-controls" role="group" aria-label="Uncertainty model">
+            <button type="button" data-uncertainty-mode="closed-loop" aria-pressed="true">Closed loop</button>
+            <button type="button" data-uncertainty-mode="experiment" aria-pressed="false">This experiment</button>
+            <button type="button" data-uncertainty-play>Pause</button>
+          </div>
+
+          <svg viewBox="0 0 900 420" role="img" aria-labelledby="uncertainty-svg-title uncertainty-svg-description">
+            <title id="uncertainty-svg-title">Moving relationship between planned, estimated and true trajectories</title>
+            <desc id="uncertainty-svg-description">In closed-loop execution three moving states form an uncertainty triangle. In this experiment the true state and planned state coincide, collapsing the triangle to the estimation-error line.</desc>
+
+            <path class="uncertainty-path path-plan" />
+            <path class="uncertainty-path path-truth" />
+            <path class="uncertainty-path path-estimate" />
+
+            <ellipse class="estimate-covariance" />
+            <line class="error-edge edge-control" />
+            <line class="error-edge edge-estimation" />
+            <line class="error-edge edge-total" />
+
+            <text class="edge-label label-control">control</text>
+            <text class="edge-label label-estimation">estimation</text>
+            <text class="edge-label label-total">total</text>
+
+            <circle class="state-point point-plan" r="6" />
+            <circle class="state-point point-estimate" r="7" />
+            <circle class="state-point point-truth" r="6" />
+
+            <text class="state-label label-plan">x̄</text>
+            <text class="state-label label-estimate">x̂</text>
+            <text class="state-label label-truth">x</text>
+            <text class="state-label label-combined">x ≡ x̄</text>
+
+            <line class="time-guide" y1="349" y2="366" />
+            <path class="time-axis" d="M80 358 H790" />
+            <text class="time-label" x="804" y="364">t</text>
+          </svg>
+
+          <p class="uncertainty-status" aria-live="polite">controller uses x̂ − x̄ · truth remains unknown</p>
+        </div>
+      </section>
+
+      <section class="gps-denied" aria-labelledby="gps-denied-title">
+        <div class="gps-denied-copy">
+          <h2 id="gps-denied-title">Dead reckoning: position from motion.</h2>
+          <p>Each motion measurement advances the previous estimate. Small errors are integrated too, so uncertainty grows until another observation constrains it.</p>
+        </div>
+        <div class="dead-reckoning-visual">
+          <div class="dead-reckoning-controls">
+            <button type="button" data-dead-reckoning-play>Pause</button>
+          </div>
+          <svg viewBox="0 0 900 430" role="img" aria-labelledby="dead-reckoning-svg-title dead-reckoning-svg-description">
+            <title id="dead-reckoning-svg-title">Dead reckoning accumulates motion-measurement error</title>
+            <desc id="dead-reckoning-svg-description">A true trajectory and a position estimated from successive motion measurements begin together and gradually diverge. The estimate's uncertainty grows until visual features provide a correcting observation.</desc>
+
+            <defs>
+              <marker id="dead-reckoning-arrow" markerWidth="7" markerHeight="7" refX="5.8" refY="3.5" orient="auto" markerUnits="strokeWidth">
+                <path d="M0 0 L7 3.5 L0 7 Z" />
+              </marker>
+            </defs>
+
+            <path class="dead-reckoning-ribbon" />
+            <path class="dead-reckoning-guide true-guide" d="M82 304 C230 298 268 203 414 220 S650 304 812 186" />
+            <path class="dead-reckoning-guide estimate-guide" d="M82 304 C226 292 288 180 430 176 S662 201 812 112" />
+
+            <g class="dead-reckoning-features" aria-hidden="true">
+              <circle cx="830" cy="70" r="5" />
+              <circle cx="856" cy="218" r="5" />
+              <path d="M817 58 L843 82 M843 58 L817 82 M843 205 L869 231 M869 205 L843 231" />
+            </g>
+            <g class="dead-reckoning-rays" aria-hidden="true">
+              <line x2="830" y2="70" />
+              <line x2="856" y2="218" />
+            </g>
+
+            <ellipse class="dead-reckoning-uncertainty" />
+            <line class="dead-reckoning-error" />
+            <line class="dead-reckoning-correction" marker-end="url(#dead-reckoning-arrow)" />
+
+            <g class="dead-reckoning-start">
+              <circle cx="82" cy="304" r="7" />
+              <text x="82" y="338">known position</text>
+            </g>
+            <g class="dead-reckoning-true">
+              <circle r="7" />
+              <text>true</text>
+            </g>
+            <g class="dead-reckoning-estimate">
+              <circle r="7" />
+              <text>estimate</text>
+            </g>
+
+            <g class="dead-reckoning-steps" aria-hidden="true"></g>
+            <path class="dead-reckoning-time" d="M82 378 H812" marker-end="url(#dead-reckoning-arrow)" />
+            <text class="dead-reckoning-time-label" x="825" y="383">time</text>
+          </svg>
+          <p class="dead-reckoning-status" aria-live="polite">Begin from a known position.</p>
+        </div>
+      </section>
+
+      <section class="feature-study" aria-labelledby="feature-study-title">
+        <header class="feature-study-heading">
+          <h2 id="feature-study-title">What the camera sees</h2>
+          <p>Tracked features constrain that drift. Below, the same recorded observations appear in the fixed simulator map and image plane.</p>
+        </header>
+
+        <div class="feature-controls">
+          <button id="feature-play" type="button" aria-label="Pause feature playback">Pause</button>
+          <input id="feature-time" type="range" min="8" max="41.3" step="0.01" value="8" aria-label="Playback time">
+          <output id="feature-clock" for="feature-time">8.0 s</output>
+        </div>
+
+        <div class="feature-columns" aria-hidden="true">
+          <span>Fixed map</span><span>Image plane</span>
+        </div>
+        <div id="feature-rows"></div>
+
+        <div class="chase-study">
+          <header class="chase-heading">
+            <h3>Follow view</h3>
+            <p>Truth, OpenVINS estimate, visible landmarks, and recorded 95% position covariance.</p>
+          </header>
+          <div class="chase-grid">
+            <article class="chase-case" data-chase="straight">
+              <header><h4>Less informative</h4><p>straight baseline</p></header>
+              <div class="chase-viewport">
+                <canvas aria-label="Follow view of the straight baseline"></canvas>
+                <span class="chase-error"></span>
+              </div>
+            </article>
+            <article class="chase-case" data-chase="weave_3d">
+              <header><h4>More informative</h4><p>3D oscillation</p></header>
+              <div class="chase-viewport">
+                <canvas aria-label="Follow view of the 3D oscillation"></canvas>
+                <span class="chase-error"></span>
+              </div>
+            </article>
+          </div>
+          <p class="chase-key"><i class="truth-key"></i>truth <i class="estimate-key"></i>estimate <i class="covariance-key"></i>95% position covariance</p>
+        </div>
+        <p class="feature-method-note">Exact feature IDs emitted to OpenVINS; pixel positions reconstructed from the saved map, pose, and calibration.</p>
+      </section>
+    </main>
+  </body>
 </html>
