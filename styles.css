@@ -686,7 +686,7 @@ h1 {
   width: 100%;
   min-width: 900px;
   height: auto;
-  aspect-ratio: 1500 / 790;
+  aspect-ratio: 1500 / 650;
 }
 
 .system-diagram text {
@@ -743,7 +743,7 @@ h1 {
 
 .axis {
   stroke: var(--ink);
-  stroke-width: 3;
+  stroke-width: 2.5;
 }
 
 .gravity {
@@ -752,18 +752,44 @@ h1 {
 }
 
 .frame-label {
-  font-size: 35px;
+  font-size: 30px;
+}
+
+.frame-axis-label {
+  font-size: 22px;
+}
+
+.frame-symbol {
+  fill: var(--ink);
+  font-size: 25px;
+  paint-order: stroke;
+  stroke: var(--paper);
+  stroke-width: 6px;
+  stroke-linejoin: round;
+}
+
+.frame-origin {
+  fill: var(--paper);
+  stroke: var(--ink);
+  stroke-width: 2.5;
 }
 
 .pose-leader {
   stroke: var(--muted);
-  stroke-width: 2;
-  stroke-dasharray: 8 10;
+  stroke-width: 1.7;
+  stroke-dasharray: 1 10;
 }
 
 .pose-label {
   fill: var(--muted);
-  font-size: 24px;
+  font-size: 21px;
+}
+
+.transform-label {
+  paint-order: stroke;
+  stroke: var(--paper);
+  stroke-width: 9px;
+  stroke-linejoin: round;
 }
 
 .arm {
@@ -853,28 +879,28 @@ h1 {
 
 .sensor-title {
   fill: var(--blue);
-  font-size: 25px;
+  font-size: 20px;
 }
 
 .sensor-equation {
-  font-size: 34px;
+  font-size: 28px;
 }
 
 .signal-path {
   stroke: var(--blue);
-  stroke-width: 2.4;
+  stroke-width: 1.9;
 }
 
 .sensor-node {
   fill: var(--paper);
   stroke: var(--blue);
-  stroke-width: 3;
+  stroke-width: 2.5;
 }
 
 .signal-trace {
   fill: none;
   stroke: var(--blue);
-  stroke-width: 2.4;
+  stroke-width: 1.9;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
@@ -889,7 +915,7 @@ h1 {
 .camera-body circle {
   fill: var(--paper);
   stroke: var(--ink);
-  stroke-width: 3;
+  stroke-width: 2.5;
 }
 
 .camera-mount {
@@ -900,11 +926,15 @@ h1 {
 
 .extrinsic-label {
   fill: var(--muted);
-  font-size: 21px;
+  font-size: 20px;
 }
 
 .camera-centre {
-  fill: var(--blue);
+  fill: var(--paper);
+}
+
+.camera-transform {
+  stroke-width: 1.7;
 }
 
 .camera-axis {
@@ -965,7 +995,11 @@ h1 {
 
 .measurement-label,
 .landmark-label {
-  font-size: 27px;
+  font-size: 24px;
+  paint-order: stroke;
+  stroke: var(--paper);
+  stroke-width: 7px;
+  stroke-linejoin: round;
 }
 
 .optical-label {
