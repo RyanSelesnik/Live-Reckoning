@@ -6,7 +6,7 @@
     <meta name="description" content="Estimation-aware trajectory optimisation for visual-inertial navigation.">
     <meta name="theme-color" content="#ffffff">
     <title>Live Reckoning</title>
-    <link rel="stylesheet" href="styles.css?v=20260913-body-rates-2">
+    <link rel="stylesheet" href="styles.css?v=20260913-programme">
     <script src="motion-data.js" defer></script>
     <script src="chase-data.js" defer></script>
     <script src="optimization-data.js?v=20260913-formulation-2" defer></script>
@@ -433,13 +433,28 @@
           </article>
 
           <article class="formulation-panel formulation-problem">
-            <header><h3>Estimation-aware programme</h3><small>CasADi · IPOPT · warm-started continuation</small></header>
-            <div class="problem-equation">
-              <p><span>minimise</span> J<sub>P</sub>(<b>X</b>, <b>U</b>)</p>
-              <p><span>subject to</span> J<sub>motion</sub> ≤ (1 + ε)J<sub>motion</sub><sup>⋆</sup></p>
+            <header><h3>Estimation-aware trajectory optimisation</h3><small>nominal finite-horizon plan</small></header>
+            <div class="optimisation-programme" aria-label="Estimation-aware trajectory optimisation problem">
+              <div class="programme-objective">
+                <span class="programme-operator">minimise<small><span class="overbar">X</span>, <span class="overbar">U</span></small></span>
+                <p><span class="programme-expression">J<sub>P</sub>(<span class="overbar">X</span>, <span class="overbar">U</span>)</span></p>
+              </div>
+              <div class="programme-constraints">
+                <span class="programme-operator">subject to</span>
+                <div class="programme-stack">
+                  <p><span class="programme-expression"><span class="overbar">x</span><sub>0</sub> = x̂<sub>0</sub>, &nbsp; <span class="overbar">x</span><sub>N</sub> = x<sub>goal</sub></span></p>
+                  <p><span class="programme-expression"><span class="overbar">x</span><sub>k+1</sub> = f<sub>d</sub>(<span class="overbar">x</span><sub>k</sub>, <span class="overbar">u</span><sub>k</sub>)</span><small>k = 0, …, N − 1</small></p>
+                  <p><span class="programme-expression">g(<span class="overbar">x</span><sub>k</sub>, <span class="overbar">u</span><sub>k</sub>) ≤ 0</span><small>state, input and camera constraints</small></p>
+                  <p><span class="programme-expression">J<sub>motion</sub>(<span class="overbar">X</span>, <span class="overbar">U</span>) ≤ (1 + ε)J<sub>motion</sub><sup>⋆</sup></span></p>
+                </div>
+              </div>
             </div>
-            <p class="math-line motion-cost">J<sub>motion</sub> = hΣ (‖s<sub>k</sub>‖² + 0.1α<sub>k</sub>²)</p>
-            <p class="formulation-explainer">J<sub>motion</sub><sup>⋆</sup> is solved first. ε then grants a relative motion budget; there is no arbitrary covariance–motion weighting and no prescribed lateral waypoint or parallax reward.</p>
+            <div class="programme-definitions">
+              <p><span>uncertainty</span> J<sub>P</sub> = Σ<sub>k=1</sub><sup>N</sup> tr(C<sub>p</sub>P<sub>k</sub><sup>+</sup>C<sub>p</sub><sup>T</sup>)</p>
+              <p><span>motion</span> J<sub>motion</sub> = hΣ<sub>k=0</sub><sup>N−1</sup>(‖s<sub>k</sub>‖² + 0.1α<sub>k</sub>²)</p>
+              <p><span>reference</span> J<sub>motion</sub><sup>⋆</sup> is the minimum feasible motion cost solved first</p>
+            </div>
+            <p class="formulation-explainer">The nominal plan begins at the current estimate x̂<sub>0</sub>. The function g collects all knotwise derivative bounds and camera field-of-view constraints. ε grants a relative motion allowance without introducing an arbitrary weighted sum.</p>
           </article>
 
           <article class="formulation-panel formulation-constraints">

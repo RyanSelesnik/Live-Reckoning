@@ -1287,8 +1287,62 @@ h1 {
 .formulation-explainer,
 .constraint-note { color: var(--muted); font: .72rem/1.45 Inter, ui-sans-serif, sans-serif; }
 .dynamics-equations .dynamics-note { margin-top: 1rem; max-width: 23rem; }
-.problem-equation { padding: .25rem 0 1rem; font: 400 1.18rem/1.6 "Latin Modern Roman", Georgia, serif; }
-.problem-equation span { display: inline-block; width: 5.5rem; color: var(--muted); font: .66rem/1 Inter, sans-serif; }
+.formulation-problem { grid-column: 1 / -1; order: -1; }
+.optimisation-programme {
+  display: grid;
+  gap: .85rem;
+  max-width: 58rem;
+  padding: .55rem 0 1.25rem;
+  font: 400 clamp(1.18rem, 1.6vw, 1.48rem)/1.5 "Latin Modern Roman", Georgia, serif;
+}
+.programme-objective,
+.programme-constraints {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  gap: 1.2rem;
+  align-items: baseline;
+}
+.programme-objective p,
+.programme-stack p { margin: 0; }
+.programme-operator {
+  color: var(--muted);
+  font: .68rem/1.25 Inter, ui-sans-serif, sans-serif;
+}
+.programme-operator small {
+  display: block;
+  padding-top: .3rem;
+  color: var(--ink);
+  font: 400 .9rem/1.2 "Latin Modern Roman", Georgia, serif;
+}
+.programme-stack { display: grid; gap: .24rem; }
+.programme-stack p {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2rem;
+  align-items: baseline;
+}
+.programme-stack p small {
+  align-self: baseline;
+  color: var(--muted);
+  font: .64rem/1.25 Inter, ui-sans-serif, sans-serif;
+}
+.overbar { text-decoration: overline; text-decoration-thickness: .055em; }
+.programme-definitions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 3vw, 3rem);
+  margin-bottom: 1.15rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--hairline);
+  font: 400 .82rem/1.45 "Latin Modern Roman", Georgia, serif;
+}
+.programme-definitions p { margin: 0; }
+.programme-definitions p > span {
+  display: block;
+  padding-bottom: .3rem;
+  color: var(--muted);
+  font: .64rem/1.2 Inter, ui-sans-serif, sans-serif;
+}
 .motion-cost { padding-bottom: 1rem; }
 .formulation-explainer { max-width: 39rem; }
 .formulation-panel dl > div { display: grid; grid-template-columns: 6.2rem 1fr; gap: 1rem; padding: .46rem 0; border-bottom: 1px solid var(--hairline); }
@@ -1310,6 +1364,11 @@ h1 {
   .formulation-heading { grid-template-columns: 1fr; gap: .75rem; }
   .formulation-grid { grid-template-columns: 1fr; }
   .dynamics-equations { grid-template-columns: 1fr; gap: .4rem; }
+  .programme-objective,
+  .programme-constraints { grid-template-columns: 5.5rem minmax(0, 1fr); gap: .75rem; }
+  .programme-stack p { display: block; }
+  .programme-stack p small { display: block; padding-top: .15rem; }
+  .programme-definitions { grid-template-columns: 1fr; gap: .8rem; }
 }
 
 .validation-heading {
