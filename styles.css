@@ -835,14 +835,18 @@ h1 {
 
 .rotation-dof {
   stroke: var(--blue);
-  stroke-width: 1.7;
-  opacity: .74;
+  stroke-width: 1.45;
+  opacity: .68;
 }
 
 .omega-label {
   fill: var(--blue);
-  font-size: 23px;
-  opacity: .86;
+  font-size: 20px;
+  opacity: .8;
+  paint-order: stroke;
+  stroke: var(--paper);
+  stroke-width: 5px;
+  stroke-linejoin: round;
 }
 
 .specific-force {
