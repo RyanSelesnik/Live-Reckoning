@@ -69,7 +69,16 @@ function makeGrid() {
   for (let y = -10; y <= 10; y += 4) vertices.push(0, y, 0, 32, y, 0);
   const geometry = new THREE.BufferGeometry();
   geometry.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
-  return new THREE.LineSegments(geometry, new THREE.LineBasicMaterial({color: 0xdfe3e4, transparent: true, opacity: .48}));
+  return new THREE.LineSegments(geometry, new THREE.LineBasicMaterial({color: 0xcfd5d7, transparent: true, opacity: .58}));
+}
+
+function makeGround() {
+  const ground = new THREE.Mesh(
+    new THREE.PlaneGeometry(32, 20),
+    new THREE.MeshBasicMaterial({color: 0xf3f5f5, side: THREE.DoubleSide})
+  );
+  ground.position.set(16, 0, -.025);
+  return ground;
 }
 
 function makeView(element) {
@@ -83,9 +92,9 @@ function makeView(element) {
   renderer.setClearColor(0xffffff, 1);
 
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(43, 1, .04, 100);
+  const camera = new THREE.PerspectiveCamera(45, 1, .04, 100);
   camera.up.set(0, 0, 1);
-  scene.add(makeGrid());
+  scene.add(makeGround(), makeGrid());
 
   const cloudGeometry = new THREE.BufferGeometry();
   cloudGeometry.setAttribute("position", new THREE.Float32BufferAttribute(experiment.landmarks.flat(), 3));
@@ -126,9 +135,9 @@ function makeView(element) {
   const rotationMatrix = new THREE.Matrix4();
   const truthPosition = new THREE.Vector3();
   const estimatePosition = new THREE.Vector3();
-  const direction = new THREE.Vector3(1, 0, 0);
   const desiredCamera = new THREE.Vector3();
   const lookTarget = new THREE.Vector3();
+  const cameraOffset = new THREE.Vector3(-4.4, -2.8, 2.2);
   let initialized = false;
   let lastIndex = -1;
 
@@ -187,15 +196,16 @@ function makeView(element) {
     });
     rayGeometry.attributes.position.needsUpdate = true;
 
-    const ahead = frames[Math.min(frames.length - 1, index + 3)][1];
-    direction.set(ahead[0] - truth[0], ahead[1] - truth[1], 0);
-    if (direction.lengthSq() < 1e-6) direction.set(1, 0, 0); else direction.normalize();
-    desiredCamera.copy(truthPosition).addScaledVector(direction, -3.1).add(new THREE.Vector3(0, 0, 1.45));
-    lookTarget.copy(truthPosition).addScaledVector(direction, .75);
+    // Follow translation only. A fixed world-space offset avoids inheriting
+    // the vehicle's changing heading, roll, and pitch.
+    desiredCamera.copy(truthPosition).add(cameraOffset);
     if (!initialized || Math.abs(index - lastIndex) > 12) {
-      camera.position.copy(desiredCamera); initialized = true;
+      camera.position.copy(desiredCamera);
+      lookTarget.copy(truthPosition);
+      initialized = true;
     } else {
-      camera.position.lerp(desiredCamera, .09);
+      camera.position.lerp(desiredCamera, .055);
+      lookTarget.lerp(truthPosition, .055);
     }
     camera.lookAt(lookTarget);
     renderer.render(scene, camera);
