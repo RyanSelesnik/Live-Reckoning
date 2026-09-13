@@ -9,12 +9,14 @@
     <link rel="stylesheet" href="styles.css">
     <script src="motion-data.js" defer></script>
     <script src="chase-data.js" defer></script>
+    <script src="optimization-data.js" defer></script>
     <script src="diagram.js" defer></script>
     <script src="uncertainty-triangle.js" defer></script>
     <script src="dead-reckoning.js" defer></script>
     <script src="feature-correspondence.js" defer></script>
     <script src="vendor/three.min.js" defer></script>
     <script src="chase-view.js" defer></script>
+    <script src="optimization-view.js" defer></script>
   </head>
   <body>
     <header class="site-header">
@@ -313,6 +315,38 @@
           <p class="chase-key"><i class="truth-key"></i>truth <i class="estimate-key"></i>estimate <i class="covariance-key"></i>95% position covariance</p>
         </div>
         <p class="feature-method-note">Exact feature IDs emitted to OpenVINS; pixel positions reconstructed from the saved map, pose, and calibration.</p>
+      </section>
+
+      <section class="optimizer-story" aria-labelledby="optimizer-title">
+        <header class="optimizer-heading">
+          <h2 id="optimizer-title">What the optimizer sees</h2>
+          <p>A saved family of five-second plans toward one fixed, frontal landmark. More permitted motion changes the viewpoint—and the predicted uncertainty.</p>
+        </header>
+
+        <div class="optimizer-control">
+          <label for="optimizer-allowance">motion allowance</label>
+          <input id="optimizer-allowance" type="range" min="0" max="14" step="1" value="0">
+          <output id="optimizer-allowance-value" for="optimizer-allowance">motion-only</output>
+        </div>
+
+        <div class="optimizer-layout">
+          <figure class="optimizer-panel optimizer-motion-panel">
+            <figcaption><span>candidate motion</span><small>sightlines at 1 s intervals</small></figcaption>
+            <svg id="optimizer-trajectory" viewBox="0 0 720 380" role="img" aria-label="Saved candidate trajectory and viewing rays to the front landmark"></svg>
+          </figure>
+          <div class="optimizer-rollouts">
+            <figure class="optimizer-panel">
+              <figcaption><span>covariance rollout</span><strong id="optimizer-mean-value">0.292 m²</strong></figcaption>
+              <svg id="optimizer-covariance" viewBox="0 0 500 225" role="img" aria-label="Posterior horizontal position covariance over time"></svg>
+            </figure>
+            <figure class="optimizer-panel">
+              <figcaption><span>motion–uncertainty frontier</span><strong id="optimizer-motion-value">0%</strong></figcaption>
+              <svg id="optimizer-frontier" viewBox="0 0 500 205" role="img" aria-label="Saved motion cost and covariance trade-off"></svg>
+            </figure>
+          </div>
+        </div>
+
+        <p class="optimizer-note"><span>predicted mean = nominal plan; covariance changes</span> Stored hard-FoV centre-landmark sweep. The slider selects solved trajectories; it does not interpolate or rerun OpenVINS.</p>
       </section>
     </main>
   </body>
