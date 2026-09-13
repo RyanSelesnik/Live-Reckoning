@@ -1289,44 +1289,15 @@ h1 {
 .dynamics-equations .dynamics-note { margin-top: 1rem; max-width: 23rem; }
 .formulation-problem { grid-column: 1 / -1; order: -1; }
 .optimisation-programme {
-  display: grid;
-  gap: .85rem;
-  max-width: 58rem;
-  padding: .55rem 0 1.25rem;
-  font: 400 clamp(1.18rem, 1.6vw, 1.48rem)/1.5 "Latin Modern Roman", Georgia, serif;
+  max-width: 62rem;
+  overflow-x: auto;
+  padding: .6rem 0 1.4rem;
 }
-.programme-objective,
-.programme-constraints {
-  display: grid;
-  grid-template-columns: 7rem minmax(0, 1fr);
-  gap: 1.2rem;
-  align-items: baseline;
-}
-.programme-objective p,
-.programme-stack p { margin: 0; }
-.programme-operator {
-  color: var(--muted);
-  font: .68rem/1.25 Inter, ui-sans-serif, sans-serif;
-}
-.programme-operator small {
-  display: block;
-  padding-top: .3rem;
-  color: var(--ink);
-  font: 400 .9rem/1.2 "Latin Modern Roman", Georgia, serif;
-}
-.programme-stack { display: grid; gap: .24rem; }
-.programme-stack p {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 2rem;
-  align-items: baseline;
-}
-.programme-stack p small {
-  align-self: baseline;
-  color: var(--muted);
-  font: .64rem/1.25 Inter, ui-sans-serif, sans-serif;
-}
-.overbar { text-decoration: overline; text-decoration-thickness: .055em; }
+.programme-tex { min-width: 42rem; }
+.programme-tex .katex-display { margin: 0; text-align: left; }
+.programme-tex .katex-display > .katex { text-align: left; font-size: 1.18em; }
+.programme-definitions .katex,
+.formulation-explainer .katex { font-size: 1em; }
 .programme-definitions {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1364,10 +1335,7 @@ h1 {
   .formulation-heading { grid-template-columns: 1fr; gap: .75rem; }
   .formulation-grid { grid-template-columns: 1fr; }
   .dynamics-equations { grid-template-columns: 1fr; gap: .4rem; }
-  .programme-objective,
-  .programme-constraints { grid-template-columns: 5.5rem minmax(0, 1fr); gap: .75rem; }
-  .programme-stack p { display: block; }
-  .programme-stack p small { display: block; padding-top: .15rem; }
+  .programme-tex { min-width: 39rem; }
   .programme-definitions { grid-template-columns: 1fr; gap: .8rem; }
 }
 

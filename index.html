@@ -6,7 +6,10 @@
     <meta name="description" content="Estimation-aware trajectory optimisation for visual-inertial navigation.">
     <meta name="theme-color" content="#ffffff">
     <title>Live Reckoning</title>
-    <link rel="stylesheet" href="styles.css?v=20260913-programme">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.18.7/dist/katex.min.css" integrity="sha384-JctiRyLzXCrSoOOzFlSoWLdyzQl7OrrRnhyeBmzB6ZWtcjccUyc8lCQJqIbs3uQX" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles.css?v=20260913-katex-programme">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.18.7/dist/katex.min.js" integrity="sha384-+7Keh381hSkXmXqnjC0JBM/kzsN6TFj+wMKychSLjTvJ8/0ElMde2uKl8i6p6Buj" crossorigin="anonymous"></script>
+    <script defer src="math.js?v=20260913-katex-programme"></script>
     <script src="motion-data.js" defer></script>
     <script src="chase-data.js" defer></script>
     <script src="optimization-data.js?v=20260913-formulation-2" defer></script>
@@ -435,26 +438,28 @@
           <article class="formulation-panel formulation-problem">
             <header><h3>Estimation-aware trajectory optimisation</h3><small>nominal finite-horizon plan</small></header>
             <div class="optimisation-programme" aria-label="Estimation-aware trajectory optimisation problem">
-              <div class="programme-objective">
-                <span class="programme-operator">minimise<small><span class="overbar">X</span>, <span class="overbar">U</span></small></span>
-                <p><span class="programme-expression">J<sub>P</sub>(<span class="overbar">X</span>, <span class="overbar">U</span>)</span></p>
-              </div>
-              <div class="programme-constraints">
-                <span class="programme-operator">subject to</span>
-                <div class="programme-stack">
-                  <p><span class="programme-expression"><span class="overbar">x</span><sub>0</sub> = x̂<sub>0</sub>, &nbsp; <span class="overbar">x</span><sub>N</sub> = x<sub>goal</sub></span></p>
-                  <p><span class="programme-expression"><span class="overbar">x</span><sub>k+1</sub> = f<sub>d</sub>(<span class="overbar">x</span><sub>k</sub>, <span class="overbar">u</span><sub>k</sub>)</span><small>k = 0, …, N − 1</small></p>
-                  <p><span class="programme-expression">g(<span class="overbar">x</span><sub>k</sub>, <span class="overbar">u</span><sub>k</sub>) ≤ 0</span><small>state, input and camera constraints</small></p>
-                  <p><span class="programme-expression">J<sub>motion</sub>(<span class="overbar">X</span>, <span class="overbar">U</span>) ≤ (1 + ε)J<sub>motion</sub><sup>⋆</sup></span></p>
-                </div>
+              <div class="programme-tex" data-tex="display">
+\begin{aligned}
+\underset{\bar{\mathbf X},\,\bar{\mathbf U}}{\operatorname{minimise}}\quad
+& J_P\!\left(\bar{\mathbf X},\bar{\mathbf U}\right) \\[0.45em]
+\text{subject to}\quad
+& \bar{\mathbf x}_0=\hat{\mathbf x}_0,
+\qquad \bar{\mathbf x}_N=\mathbf x_{\mathrm{goal}}, \\
+& \bar{\mathbf x}_{k+1}
+=f_d\!\left(\bar{\mathbf x}_k,\bar{\mathbf u}_k\right),
+\qquad k=0,\ldots,N-1, \\
+& \mathbf g\!\left(\bar{\mathbf x}_k,\bar{\mathbf u}_k\right)\leq\mathbf 0, \\
+& J_{\mathrm{motion}}\!\left(\bar{\mathbf X},\bar{\mathbf U}\right)
+\leq(1+\varepsilon)J_{\mathrm{motion}}^\star .
+\end{aligned}
               </div>
             </div>
             <div class="programme-definitions">
-              <p><span>uncertainty</span> J<sub>P</sub> = Σ<sub>k=1</sub><sup>N</sup> tr(C<sub>p</sub>P<sub>k</sub><sup>+</sup>C<sub>p</sub><sup>T</sup>)</p>
-              <p><span>motion</span> J<sub>motion</sub> = hΣ<sub>k=0</sub><sup>N−1</sup>(‖s<sub>k</sub>‖² + 0.1α<sub>k</sub>²)</p>
-              <p><span>reference</span> J<sub>motion</sub><sup>⋆</sup> is the minimum feasible motion cost solved first</p>
+              <p><span>uncertainty</span><span data-tex="inline">J_P=\sum_{k=1}^{N}\operatorname{tr}(\mathbf C_p\mathbf P_k^+\mathbf C_p^\top)</span></p>
+              <p><span>motion</span><span data-tex="inline">J_{\mathrm{motion}}=h\sum_{k=0}^{N-1}(\lVert\mathbf s_k\rVert^2+0.1\alpha_k^2)</span></p>
+              <p><span>reference</span><span data-tex="inline">J_{\mathrm{motion}}^\star</span> is the minimum feasible motion cost solved first</p>
             </div>
-            <p class="formulation-explainer">The nominal plan begins at the current estimate x̂<sub>0</sub>. The function g collects all knotwise derivative bounds and camera field-of-view constraints. ε grants a relative motion allowance without introducing an arbitrary weighted sum.</p>
+            <p class="formulation-explainer">The nominal plan begins at the current estimate <span data-tex="inline">\hat{\mathbf x}_0</span>. The function <span data-tex="inline">\mathbf g</span> collects all knotwise derivative bounds and camera field-of-view constraints. <span data-tex="inline">\varepsilon</span> grants a relative motion allowance without introducing an arbitrary weighted sum.</p>
           </article>
 
           <article class="formulation-panel formulation-constraints">
