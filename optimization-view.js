@@ -153,15 +153,16 @@
   function drawFrontier() {
     clear(frontierSvg);
     const W=500,H=205,m={l:51,r:16,t:18,b:35};
-    const sx=(v)=>m.l+v/300*(W-m.l-m.r);
+    const xMax=Math.log10(301);
+    const sx=(v)=>m.l+Math.log10(1+v)/xMax*(W-m.l-m.r);
     const lo=Math.log10(.015),hi=Math.log10(.35);
     const sy=(v)=>H-m.b-(Math.log10(v)-lo)/(hi-lo)*(H-m.t-m.b);
     [0.02,0.05,0.1,0.2].forEach((v)=>{
       frontierSvg.append(element("line",{x1:m.l,x2:W-m.r,y1:sy(v),y2:sy(v),class:"optimizer-gridline"}));
       frontierSvg.append(element("text",{x:m.l-8,y:sy(v)+4,class:"optimizer-tick","text-anchor":"end"},v.toString()));
     });
-    [0,100,200,300].forEach((v)=>frontierSvg.append(element("text",{x:sx(v),y:H-11,class:"optimizer-tick","text-anchor":"middle"},`${v}`)));
-    frontierSvg.append(element("text",{x:(m.l+W-m.r)/2,y:H-2,class:"optimizer-axis","text-anchor":"middle"},"motion-cost increase [%]"));
+    [0,1,10,100,300].forEach((v)=>frontierSvg.append(element("text",{x:sx(v),y:H-11,class:"optimizer-tick","text-anchor":"middle"},`${v}`)));
+    frontierSvg.append(element("text",{x:(m.l+W-m.r)/2,y:H-2,class:"optimizer-axis","text-anchor":"middle"},"motion-cost increase [%] · log(1+x) scale"));
     frontierSvg.append(element("text",{x:6,y:12,class:"optimizer-axis"},"mean covariance [m²] · log scale"));
     activeKeys().forEach((key)=>{
       const geometry=data.geometries[key], current=selectedCase(key), colour=colours[key];
