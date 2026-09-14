@@ -7,9 +7,9 @@
     <meta name="theme-color" content="#ffffff">
     <title>Live Reckoning</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.18.7/dist/katex.min.css" integrity="sha384-JctiRyLzXCrSoOOzFlSoWLdyzQl7OrrRnhyeBmzB6ZWtcjccUyc8lCQJqIbs3uQX" crossorigin="anonymous">
-    <link rel="stylesheet" href="styles.css?v=20260913-katex-programme">
+    <link rel="stylesheet" href="styles.css?v=20260914-katex-all-math">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.18.7/dist/katex.min.js" integrity="sha384-+7Keh381hSkXmXqnjC0JBM/kzsN6TFj+wMKychSLjTvJ8/0ElMde2uKl8i6p6Buj" crossorigin="anonymous"></script>
-    <script defer src="math.js?v=20260913-katex-programme"></script>
+    <script defer src="math.js?v=20260914-katex-all-math"></script>
     <script src="motion-data.js" defer></script>
     <script src="chase-data.js" defer></script>
     <script src="optimization-data.js?v=20260913-formulation-2" defer></script>
@@ -377,7 +377,7 @@
           </div>
         </div>
 
-        <p class="optimizer-note"><span>predicted mean = nominal plan; covariance changes</span> Stored centred and left-landmark sweeps from the current report experiment. The controls select solved trajectories; they do not interpolate or rerun the optimiser.</p>
+        <p class="optimizer-note"><span data-tex="inline">\text{predicted mean}=\text{nominal plan};\;\mathbf P\text{ changes}</span> Stored centred and left-landmark sweeps from the current report experiment. The controls select solved trajectories; they do not interpolate or rerun the optimiser.</p>
       </section>
 
       <section class="formulation-story" aria-labelledby="formulation-title">
@@ -389,50 +389,50 @@
         <div class="formulation-chain" aria-label="Computation from trajectory to estimation objective">
           <article>
             <h3>plan</h3>
-            <p class="math-line"><b>X</b><sub>k</sub> = (p, v, a, j, ψ, r)</p>
-            <p class="math-line"><b>U</b><sub>k</sub> = (s, α)</p>
+            <p class="math-line" data-tex="inline">\mathbf X_k=(\mathbf p_k,\mathbf v_k,\mathbf a_k,\mathbf j_k,\psi_k,r_k)</p>
+            <p class="math-line" data-tex="inline">\mathbf U_k=(\mathbf s_k,\alpha_k)</p>
             <small>horizontal flat outputs</small>
           </article>
           <i aria-hidden="true">→</i>
           <article>
             <h3>lift</h3>
-            <p class="math-line">(a, j, ψ, r) ↦ (R<sub>WB</sub>, f<sub>B</sub>, ω<sub>B</sub>)</p>
+            <p class="math-line" data-tex="inline">(\mathbf a,\mathbf j,\psi,r)\mapsto(\mathbf R_{WB},\mathbf f_B,\boldsymbol\omega_B)</p>
             <small>quadrotor differential flatness</small>
           </article>
           <i aria-hidden="true">→</i>
           <article>
             <h3>predict</h3>
-            <p class="math-line">P<sup>−</sup> = F<sub>d</sub>P<sup>+</sup>F<sub>d</sub><sup>T</sup> + Q<sub>d</sub></p>
+            <p class="math-line" data-tex="inline">\mathbf P^-=\mathbf F_d\mathbf P^+\mathbf F_d^\top+\mathbf Q_d</p>
             <small>inertial error propagation</small>
           </article>
           <i aria-hidden="true">→</i>
           <article>
             <h3>observe</h3>
-            <p class="math-line">P<sup>+</sup> = P<sup>−</sup> − P<sup>−</sup>H<sup>T</sup>S<sup>−1</sup>HP<sup>−</sup></p>
+            <p class="math-line" data-tex="inline">\mathbf P^+=\mathbf P^- -\mathbf P^-\mathbf H^\top\mathbf S^{-1}\mathbf H\mathbf P^-</p>
             <small>one accepted camera update</small>
           </article>
           <i aria-hidden="true">→</i>
           <article>
             <h3>score</h3>
-            <p class="math-line">J<sub>P</sub> = Σ<sub>k=1</sub><sup>50</sup>(P<sub>xx,k</sub><sup>+</sup> + P<sub>yy,k</sub><sup>+</sup>)</p>
+            <p class="math-line" data-tex="inline">J_P=\sum_{k=1}^{50}(P_{xx,k}^+ + P_{yy,k}^+)</p>
             <small>predicted horizontal MSE</small>
           </article>
         </div>
 
         <div class="formulation-grid">
           <article class="formulation-panel formulation-dynamics">
-            <header><h3>Exact knot dynamics</h3><small>h = 0.1 s · 50 intervals · z = 1 m</small></header>
+            <header><h3>Exact knot dynamics</h3><small data-tex="inline">h=0.1\,\mathrm{s}\;\cdot\;50\text{ intervals}\;\cdot\;z=1\,\mathrm{m}</small></header>
             <div class="dynamics-equations">
               <div>
-                <p>p<sub>k+1</sub> = p<sub>k</sub> + hv<sub>k</sub> + ½h²a<sub>k</sub> + ⅙h³j<sub>k</sub> + ¹⁄₂₄h⁴s<sub>k</sub></p>
-                <p>v<sub>k+1</sub> = v<sub>k</sub> + ha<sub>k</sub> + ½h²j<sub>k</sub> + ⅙h³s<sub>k</sub></p>
-                <p>a<sub>k+1</sub> = a<sub>k</sub> + hj<sub>k</sub> + ½h²s<sub>k</sub></p>
-                <p>j<sub>k+1</sub> = j<sub>k</sub> + hs<sub>k</sub></p>
+                <p data-tex="inline">\mathbf p_{k+1}=\mathbf p_k+h\mathbf v_k+\frac{h^2}{2}\mathbf a_k+\frac{h^3}{6}\mathbf j_k+\frac{h^4}{24}\mathbf s_k</p>
+                <p data-tex="inline">\mathbf v_{k+1}=\mathbf v_k+h\mathbf a_k+\frac{h^2}{2}\mathbf j_k+\frac{h^3}{6}\mathbf s_k</p>
+                <p data-tex="inline">\mathbf a_{k+1}=\mathbf a_k+h\mathbf j_k+\frac{h^2}{2}\mathbf s_k</p>
+                <p data-tex="inline">\mathbf j_{k+1}=\mathbf j_k+h\mathbf s_k</p>
               </div>
               <div>
-                <p>ψ<sub>k+1</sub> = ψ<sub>k</sub> + hr<sub>k</sub> + ½h²α<sub>k</sub></p>
-                <p>r<sub>k+1</sub> = r<sub>k</sub> + hα<sub>k</sub></p>
-                <p class="dynamics-note">Snap s and yaw acceleration α are constant inside each interval, so these discrete dynamics are exact.</p>
+                <p data-tex="inline">\psi_{k+1}=\psi_k+hr_k+\frac{h^2}{2}\alpha_k</p>
+                <p data-tex="inline">r_{k+1}=r_k+h\alpha_k</p>
+                <p class="dynamics-note">Snap <span data-tex="inline">\mathbf s</span> and yaw acceleration <span data-tex="inline">\alpha</span> are constant inside each interval, so these discrete dynamics are exact.</p>
               </div>
             </div>
           </article>
@@ -467,10 +467,10 @@
           <article class="formulation-panel formulation-constraints">
             <header><h3>Enforced constraints</h3><small>componentwise at shooting knots</small></header>
             <dl>
-              <div><dt>boundary</dt><dd>(0, 0) → (10, 0) m; start and finish at rest</dd></div>
-              <div><dt>translation</dt><dd>|v| ≤ 5 m/s · |a| ≤ 3 m/s² · |j| ≤ 4 m/s³</dd></div>
-              <div><dt>heading</dt><dd>|ψ| ≤ 45° · |r| ≤ 60°/s · |α| ≤ 20°/s²</dd></div>
-              <div><dt>camera</dt><dd>Z<sub>C</sub> ≥ 0.1 m · 1 ≤ u ≤ 639 · 1 ≤ v ≤ 479 px</dd></div>
+              <div><dt>boundary</dt><dd><span data-tex="inline">(0,0)\rightarrow(10,0)\,\mathrm m</span>; start and finish at rest</dd></div>
+              <div><dt>translation</dt><dd data-tex="inline">\lvert\mathbf v\rvert\leq5\,\mathrm{m\,s^{-1}},\quad\lvert\mathbf a\rvert\leq3\,\mathrm{m\,s^{-2}},\quad\lvert\mathbf j\rvert\leq4\,\mathrm{m\,s^{-3}}</dd></div>
+              <div><dt>heading</dt><dd data-tex="inline">\lvert\psi\rvert\leq45^\circ,\quad\lvert r\rvert\leq60^\circ\,\mathrm{s^{-1}},\quad\lvert\alpha\rvert\leq20^\circ\,\mathrm{s^{-2}}</dd></div>
+              <div><dt>camera</dt><dd data-tex="inline">Z_C\geq0.1\,\mathrm m,\quad1\leq u\leq639,\quad1\leq v\leq479\;\mathrm{px}</dd></div>
             </dl>
             <p class="constraint-note">Not directly constrained: snap, rotor thrust, body torque, actuator dynamics, or tracking error.</p>
           </article>
@@ -478,15 +478,15 @@
           <article class="formulation-panel formulation-belief">
             <header><h3>Belief-model assumptions</h3><small>18-state covariance for one landmark</small></header>
             <dl>
-              <div><dt>state error</dt><dd>δp, δv, δθ, δb<sub>a</sub>, δb<sub>g</sub>, δℓ</dd></div>
-              <div><dt>timing</dt><dd>midpoint inertial linearisation and one correction every 0.1 s</dd></div>
-              <div><dt>measurement</dt><dd>calibrated 640 × 480 pinhole camera; σ = 1 px</dd></div>
+              <div><dt>state error</dt><dd data-tex="inline">\delta\mathbf p,\;\delta\mathbf v,\;\delta\boldsymbol\theta,\;\delta\mathbf b_a,\;\delta\mathbf b_g,\;\delta\boldsymbol\ell</dd></div>
+              <div><dt>timing</dt><dd>midpoint inertial linearisation and one correction every <span data-tex="inline">0.1\,\mathrm s</span></dd></div>
+              <div><dt>measurement</dt><dd>calibrated <span data-tex="inline">640\times480</span> pinhole camera; <span data-tex="inline">\sigma=1\,\mathrm{px}</span></dd></div>
               <div><dt>future data</dt><dd>zero-innovation MLO; the supplied landmark is accepted at every epoch</dd></div>
             </dl>
             <div class="belief-identities">
-              <p>δẋ<sub>I</sub> = F<sub>c</sub>δx<sub>I</sub> + Gn</p>
-              <p>F<sub>d</sub> ≈ I + A + ½A², &nbsp; A = F<sub>c</sub>h, &nbsp; Q<sub>d</sub> ≈ Q̄h</p>
-              <p>p<sub>ℓ</sub><sup>C</sup> = R<sub>CB</sub>R<sub>WB</sub><sup>T</sup>(ℓ<sup>W</sup> − p<sub>WB</sub><sup>W</sup>) + t<sub>CB</sub>, &nbsp; z = π(p<sub>ℓ</sub><sup>C</sup>)</p>
+              <p data-tex="inline">\delta\dot{\mathbf x}_I=\mathbf F_c\delta\mathbf x_I+\mathbf G\mathbf n</p>
+              <p data-tex="inline">\mathbf F_d\approx\mathbf I+\mathbf A+\tfrac12\mathbf A^2,\qquad\mathbf A=\mathbf F_ch,\qquad\mathbf Q_d\approx\bar{\mathbf Q}h</p>
+              <p data-tex="inline">\mathbf p_\ell^C=\mathbf R_{CB}\mathbf R_{WB}^\top(\boldsymbol\ell^W-\mathbf p_{WB}^W)+\mathbf t_{CB},\qquad\mathbf z=\pi(\mathbf p_\ell^C)</p>
             </div>
             <p class="constraint-note">The optimiser predicts covariance. It does not model feature discovery, association, rejection, or OpenVINS internally.</p>
           </article>

@@ -1275,6 +1275,11 @@ h1 {
 .math-line { font: 400 .9rem/1.35 "Latin Modern Roman", Georgia, serif; }
 .formulation-chain .math-line { padding-top: .65rem; }
 .formulation-chain .math-line + .math-line { padding-top: 0; }
+.formulation-chain .katex,
+.dynamics-equations .katex,
+.formulation-panel dd .katex,
+.belief-identities .katex,
+.optimizer-note .katex { font-size: 1em; }
 .formulation-chain article small { display: block; padding-top: .6rem; }
 
 .formulation-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(2.5rem, 5vw, 5rem); }
@@ -1308,11 +1313,15 @@ h1 {
   font: 400 .82rem/1.45 "Latin Modern Roman", Georgia, serif;
 }
 .programme-definitions p { margin: 0; }
-.programme-definitions p > span {
+.programme-definitions p > span:first-child {
   display: block;
   padding-bottom: .3rem;
   color: var(--muted);
   font: .64rem/1.2 Inter, ui-sans-serif, sans-serif;
+}
+.programme-definitions p > [data-tex] {
+  color: var(--ink);
+  font: 400 .82rem/1.45 "Latin Modern Roman", Georgia, serif;
 }
 .motion-cost { padding-bottom: 1rem; }
 .formulation-explainer { max-width: 39rem; }
