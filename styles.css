@@ -1846,22 +1846,6 @@ h1 {
   margin-bottom: 0;
 }
 
-.post-report-note {
-  max-width: 54rem;
-  margin: 0 0 2.5rem;
-  padding: 0.8rem 1rem;
-  border-left: 2px solid var(--blue);
-  background: #f7f8f8;
-  color: var(--muted);
-  font-size: 0.74rem;
-  line-height: 1.5;
-}
-
-.post-report-note strong {
-  color: var(--ink);
-  font-weight: 600;
-}
-
 .citation-section {
   width: min(1280px, calc(100% - 64px));
   margin: 0 auto;

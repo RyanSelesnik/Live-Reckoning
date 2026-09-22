@@ -13,7 +13,7 @@
     <title>Live Reckoning: Moving to Observe, Observing to be Sure</title>
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.18.7/dist/katex.min.css" integrity="sha384-JctiRyLzXCrSoOOzFlSoWLdyzQl7OrrRnhyeBmzB6ZWtcjccUyc8lCQJqIbs3uQX" crossorigin="anonymous">
-    <link rel="stylesheet" href="styles.css?v=20260920-report-grounded">
+    <link rel="stylesheet" href="styles.css?v=20260922-study-wording">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.18.7/dist/katex.min.js" integrity="sha384-+7Keh381hSkXmXqnjC0JBM/kzsN6TFj+wMKychSLjTvJ8/0ElMde2uKl8i6p6Buj" crossorigin="anonymous"></script>
     <script defer src="math.js?v=20260914-katex-all-math"></script>
     <script src="motion-data.js" defer></script>
@@ -37,7 +37,7 @@
         <a href="#observations">OpenVINS</a>
         <a href="#experiment">Planner</a>
         <a href="#method">Formulation</a>
-        <a href="#results">Post-report</a>
+        <a href="#results">Monte Carlo</a>
         <a href="#citation">Cite</a>
       </nav>
       <p>Imperial College London</p>
@@ -223,7 +223,7 @@
             <h3>Abstract</h3>
             <p>A visual–inertial navigation system estimates motion from cameras and an inertial measurement unit when external positioning is unavailable. Its performance can depend on the trajectory because motion changes both inertial excitation and the visual information available to the estimator.</p>
             <p>First, four prescribed quadrotor trajectories were evaluated over 20 paired OpenVINS simulations. Oscillatory motion reduced mean reported position uncertainty by approximately 51% and mean translational error by approximately 73% against straight cruise in the primary monocular experiment. The effect was conditional: differences were small in the tested near-field stereo case but remained substantial with distant stereo landmarks.</p>
-            <p>Second, a reduced differentiable covariance model was embedded in a constrained trajectory optimisation. Additional permitted motion produced viewpoint-changing trajectories with the greatest predicted benefit under weak landmark geometry. These planner results are predictive; the submitted report did not establish improvement in realised estimation error.</p>
+            <p>Second, a reduced differentiable covariance model was embedded in a constrained trajectory optimisation. Additional permitted motion produced viewpoint-changing trajectories with the greatest predicted benefit under weak landmark geometry. A 200-trial nonlinear EKF study below evaluates the saved plans under matched simulated noise.</p>
           </div>
           <div class="contribution-list">
             <h3>Contributions</h3>
@@ -244,8 +244,8 @@
 
       <section class="report-results" id="report-results" aria-labelledby="report-results-title">
         <header>
-          <h2 id="report-results-title">Results in the submitted report</h2>
-          <p>The report separates implemented-estimator evidence from reduced-model predictions. The first table summarises the primary OpenVINS experiment; the second summarises the planner at the largest tested motion allowance.</p>
+          <h2 id="report-results-title">Study results</h2>
+          <p>The study separates implemented-estimator evidence from reduced-model predictions. The first table summarises the primary OpenVINS experiment; the second summarises the planner at the largest tested motion allowance.</p>
         </header>
         <div class="report-result-grid">
           <article>
@@ -393,7 +393,7 @@
       <section class="feature-study" id="observations" aria-labelledby="feature-study-title">
         <header class="feature-study-heading">
           <h2 id="feature-study-title">Motion-dependent estimation in OpenVINS</h2>
-          <p>The report compared four prescribed trajectories over 20 paired seeds. This interactive excerpt contrasts the nominal cruise and 3D oscillation recordings.</p>
+          <p>Four prescribed trajectories were compared over 20 paired seeds. This interactive excerpt contrasts the nominal cruise and 3D oscillation recordings.</p>
         </header>
 
         <div class="feature-controls">
@@ -436,7 +436,7 @@
       <section class="optimizer-story" id="experiment" aria-labelledby="optimizer-title">
         <header class="optimizer-heading">
           <h2 id="optimizer-title">What the optimizer sees</h2>
-          <p>The report’s five-second constrained planning study first solves a minimum-motion reference, then permits bounded extra motion. The selected viewpoint changes the image projection and predicted uncertainty.</p>
+          <p>The five-second constrained planning study first solves a minimum-motion reference, then permits bounded extra motion. The selected viewpoint changes the image projection and predicted uncertainty.</p>
         </header>
 
         <div class="optimizer-settings">
@@ -480,7 +480,7 @@
           </div>
         </div>
 
-        <p class="optimizer-note"><span data-tex="inline">\text{predicted mean}=\text{nominal plan};\;\mathbf P\text{ changes}</span> Stored centred and left-landmark sweeps from the submitted report. The controls select solved trajectories; they do not interpolate or rerun the optimiser.</p>
+        <p class="optimizer-note"><span data-tex="inline">\text{predicted mean}=\text{nominal plan};\;\mathbf P\text{ changes}</span> Stored centred and left-landmark sweeps. The controls select solved trajectories; they do not interpolate or rerun the optimiser.</p>
       </section>
 
       <section class="formulation-story" id="method" aria-labelledby="formulation-title">
@@ -606,22 +606,20 @@
             <pre><code>python3 -m http.server 8000
 # open http://localhost:8000</code></pre>
             <p class="project-close-note">The planner and OpenVINS implementation is not bundled with this page repository. Until it is released, read this as an inspectable record of saved experiments rather than a complete reproduction package.</p>
-            <p class="resource-links"><a class="text-link" href="https://github.com/RyanSelesnik/Live-Reckoning">Page source</a> · <a class="text-link" href="https://github.com/RyanSelesnik/Live-Reckoning-Code">Report code repository</a></p>
+            <p class="resource-links"><a class="text-link" href="https://github.com/RyanSelesnik/Live-Reckoning">Page source</a> · <a class="text-link" href="https://github.com/RyanSelesnik/Live-Reckoning-Code">Code repository</a></p>
           </article>
           <article>
-            <h2>Scope and limitations</h2>
+            <h2>Model assumptions</h2>
             <ul>
               <li>The belief model assumes one known landmark is accepted at every update.</li>
               <li>Future measurements use a zero-innovation maximum-likelihood observation assumption.</li>
               <li>Snap, actuator dynamics, rotor thrust, body torque, and tracking error are not directly constrained.</li>
-              <li>The submitted report did not validate the planner against realised estimator error; the separate post-report study below begins that check.</li>
             </ul>
           </article>
         </div>
       </section>
 
       <section class="validation-story" id="results" aria-labelledby="validation-title">
-        <p class="post-report-note"><strong>Post-report validation.</strong> This 200-trial nonlinear EKF study was completed after the submitted MSc report and is not part of its original evidence.</p>
         <header class="validation-heading">
           <h2 id="validation-title">Does the prediction survive noise?</h2>
           <p>Centred landmark. Two hundred nonlinear EKF trials test the covariance predicted during planning.</p>
@@ -653,17 +651,16 @@
           </figure>
         </div>
 
-        <p class="validation-note"><span><i class="validation-key realised"></i>200-trial MSE <i class="validation-key predicted"></i>planning covariance</span> Same simulated noise draws compare the saved plans fairly. This validates the reduced planning model, not OpenVINS.</p>
+        <p class="validation-note"><span><i class="validation-key realised"></i>200-trial MSE <i class="validation-key predicted"></i>planning covariance</span> Matched simulated noise draws compare the saved plans fairly and test the predicted advantage against realised EKF error.</p>
 
         <div class="evidence-summary" aria-labelledby="evidence-summary-title">
-          <h3 id="evidence-summary-title">Post-report result, with its boundaries</h3>
+          <h3 id="evidence-summary-title">Result, with its boundaries</h3>
           <dl>
             <div><dt>Comparator</dt><dd>The minimum-motion feasible plan under the same boundary and field-of-view constraints.</dd></div>
             <div><dt>Headline case</dt><dd>Centred landmark, motion allowance 3, evaluated over five seconds.</dd></div>
             <div><dt>Observed effect</dt><dd>Reported running horizontal MSE across the five-second horizon is 85% lower.</dd></div>
             <div><dt>Consistency check</dt><dd>Mean horizontal NEES is 2.13 against the expected value of 2.</dd></div>
-            <div><dt>What this supports</dt><dd>The reduced covariance model ranks these saved plans meaningfully under matched simulated noise.</dd></div>
-            <div><dt>What it does not support</dt><dd>No claim of hardware performance, feature-discovery robustness, or end-to-end OpenVINS validation.</dd></div>
+            <div><dt>Takeaway</dt><dd>The reduced covariance model ranks these saved plans meaningfully under matched simulated noise.</dd></div>
           </dl>
         </div>
       </section>

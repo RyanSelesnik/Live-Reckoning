@@ -6,14 +6,14 @@ Towards estimation-aware trajectory planning for visual–inertial navigation.
 
 Interactive project page for Ryan Selesnik’s 2026 MSc Control and Optimisation thesis at Imperial College London, supervised by Dr David Boyle.
 
-The submitted report contains two linked studies:
+The project contains two linked studies:
 
 - four prescribed trajectories evaluated over 20 paired OpenVINS simulations;
 - a reduced differentiable covariance model used for constrained trajectory planning.
 
 In the primary monocular experiment, oscillatory motion reduced reported position uncertainty by about 51% and mean position error by about 73% versus nominal cruise. In planning, the largest tested motion allowance reduced predicted cost by 87.8% for a centred landmark, but only 20–22% for multi-landmark geometry.
 
-The page ends with a separate 200-trial nonlinear EKF Monte Carlo study. This was completed after the submitted report and is labeled as post-report validation.
+The page ends with a 200-trial nonlinear EKF Monte Carlo study of the saved plans.
 
 ## Preview locally
 
