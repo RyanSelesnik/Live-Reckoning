@@ -755,10 +755,56 @@ h1 {
 }
 
 .diagram-frame {
+  --axis-x: #c45c55;
+  --axis-y: #438d69;
+  --axis-z: #3e7c9b;
+  --axis-force: #7565ae;
   position: relative;
+  margin: 0;
   border-top: 1px solid var(--hairline);
   border-bottom: 1px solid var(--hairline);
 }
+
+.imu-world-up,
+.imu-body-vector,
+.imu-body-spin {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.imu-world-up {
+  stroke: #b8c4ca;
+  stroke-width: 1.3;
+  stroke-dasharray: 4 7;
+}
+
+.imu-body-vector { stroke-width: 3; }
+.imu-body-x { stroke: var(--axis-x); }
+.imu-body-y { stroke: var(--axis-y); }
+.imu-body-z { stroke: var(--axis-z); }
+.imu-body-force { stroke: var(--axis-force); stroke-width: 4; }
+.imu-body-spin { stroke: var(--ink); stroke-width: 1.8; }
+
+.imu-body-origin {
+  fill: var(--ink);
+}
+
+.imu-body-label {
+  font-size: 21px;
+  paint-order: stroke;
+  stroke: var(--paper);
+  stroke-width: 5px;
+  stroke-linejoin: round;
+}
+
+.imu-x-label { fill: var(--axis-x); }
+.imu-y-label { fill: var(--axis-y); }
+.imu-z-label { fill: var(--axis-z); }
+.imu-force-label { fill: var(--axis-force); }
+.imu-world-label { fill: var(--muted); }
+.imu-spin-label { fill: var(--ink); }
+.imu-origin-label { font-size: 22px; }
 
 .diagram-tools {
   position: absolute;
@@ -1077,11 +1123,20 @@ h1 {
   stroke-width: 2;
 }
 
+.frustum-field {
+  fill: #f7fafb;
+}
+
 .image-plane {
-  fill: #f7f8fa;
-  fill-opacity: 0.82;
-  stroke: var(--muted);
-  stroke-width: 2.3;
+  fill: #f2f7f8;
+  stroke: var(--blue-soft);
+  stroke-width: 2.1;
+}
+
+.plane-title {
+  fill: var(--blue);
+  font: 600 16px/1 Inter, ui-sans-serif, sans-serif;
+  text-anchor: end;
 }
 
 .plane-rule {
@@ -1101,6 +1156,12 @@ h1 {
   stroke: var(--ink);
   stroke-width: 2.5;
   stroke-dasharray: 10 10;
+}
+
+.projection-leader {
+  fill: none;
+  stroke: var(--blue-soft);
+  stroke-width: 1.4;
 }
 
 .projection {
@@ -1131,6 +1192,29 @@ h1 {
   font-size: 17px;
 }
 
+.diagram-caption {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(1.5rem, 5vw, 5rem);
+  padding: 0.85rem 0 1rem;
+  border-top: 1px solid var(--hairline);
+}
+
+.diagram-caption p {
+  max-width: 35rem;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  transition: opacity 180ms ease;
+}
+
+.diagram-caption strong {
+  margin-right: 0.45rem;
+  color: var(--blue);
+  font-weight: 600;
+}
+
 .reading-order path {
   stroke: var(--muted);
   stroke-width: 1.5;
@@ -1158,7 +1242,17 @@ h1 {
   opacity: 1;
 }
 
+.diagram-frame[data-focus="imu"] [data-caption="camera"],
+.diagram-frame[data-focus="camera"] [data-caption="imu"] {
+  opacity: 0.45;
+}
+
 @media (max-width: 760px) {
+  .diagram-caption {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+  }
+
   .site-header,
   .hero {
     width: min(100% - 32px, 1420px);
@@ -1235,7 +1329,8 @@ h1 {
   .vehicle-layer,
   .world-layer,
   .imu-layer,
-  .camera-layer {
+  .camera-layer,
+  .diagram-caption p {
     transition: none;
   }
 }
