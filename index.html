@@ -3,11 +3,17 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Estimation-aware trajectory optimisation for visual-inertial navigation.">
+    <meta name="description" content="Live Reckoning: Moving to Observe, Observing to be Sure. An MSc thesis on motion-dependent visual-inertial estimation and estimation-aware quadrotor trajectory planning.">
+    <meta name="author" content="Ryan Selesnik">
     <meta name="theme-color" content="#ffffff">
-    <title>Live Reckoning</title>
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Live Reckoning: Moving to Observe, Observing to be Sure">
+    <meta property="og:description" content="Towards estimation-aware trajectory planning for visual-inertial navigation.">
+    <meta name="twitter:card" content="summary">
+    <title>Live Reckoning: Moving to Observe, Observing to be Sure</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.18.7/dist/katex.min.css" integrity="sha384-JctiRyLzXCrSoOOzFlSoWLdyzQl7OrrRnhyeBmzB6ZWtcjccUyc8lCQJqIbs3uQX" crossorigin="anonymous">
-    <link rel="stylesheet" href="styles.css?v=20260914-katex-all-math">
+    <link rel="stylesheet" href="styles.css?v=20260920-report-grounded">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.18.7/dist/katex.min.js" integrity="sha384-+7Keh381hSkXmXqnjC0JBM/kzsN6TFj+wMKychSLjTvJ8/0ElMde2uKl8i6p6Buj" crossorigin="anonymous"></script>
     <script defer src="math.js?v=20260914-katex-all-math"></script>
     <script src="motion-data.js" defer></script>
@@ -26,6 +32,14 @@
   <body>
     <header class="site-header">
       <a class="author" href="#top" aria-label="Return to the top">Ryan Selesnik</a>
+      <nav aria-label="Project sections">
+        <a href="#overview">Overview</a>
+        <a href="#observations">OpenVINS</a>
+        <a href="#experiment">Planner</a>
+        <a href="#method">Formulation</a>
+        <a href="#results">Post-report</a>
+        <a href="#citation">Cite</a>
+      </nav>
       <p>Imperial College London</p>
     </header>
 
@@ -34,10 +48,30 @@
         <div class="hero-copy">
           <div class="hero-title-group">
             <h1 id="hero-title">Live Reckoning</h1>
-            <p class="hero-subtitle">Moving to observe, observing to be sure.</p>
+            <p class="hero-subtitle">Moving to Observe, Observing to be Sure.</p>
+            <p class="hero-deck">Towards estimation-aware trajectory planning for visual–inertial navigation.</p>
+            <p class="hero-byline"><a href="https://github.com/RyanSelesnik">Ryan Selesnik</a> · MSc Control and Optimisation · Imperial College London · 2026</p>
           </div>
-          <p class="hero-description">How a quadrotor’s motion shapes visual–inertial estimation.</p>
+          <div class="hero-introduction">
+            <p class="hero-description">Two linked studies ask how strongly quadrotor motion changes visual–inertial estimation, and whether predicted uncertainty can guide the choice of trajectory.</p>
+            <p class="hero-supervisor">Supervised by Dr David Boyle</p>
+            <div class="hero-links" aria-label="Project resources">
+              <a href="https://github.com/RyanSelesnik/Live-Reckoning">Source</a>
+              <a href="#observations">OpenVINS study</a>
+              <a href="#experiment">Planning study</a>
+              <a href="#citation">BibTeX</a>
+            </div>
+          </div>
         </div>
+
+        <aside class="headline-result" aria-label="Headline experimental result">
+          <p><strong>73% lower position error</strong> for oscillatory motion than straight cruise in the primary OpenVINS experiment.</p>
+          <dl>
+            <div><dt>experiment</dt><dd>20 paired monocular simulations</dd></div>
+            <div><dt>reported uncertainty</dt><dd>approximately 51% lower</dd></div>
+            <div><dt>planning result</dt><dd>up to 87.8% lower predicted cost</dd></div>
+          </dl>
+        </aside>
 
         <div class="diagram-frame" id="system-figure" data-focus="all">
           <div class="diagram-tools" aria-label="Highlight a sensing path">
@@ -179,6 +213,75 @@
         </div>
       </section>
 
+      <section class="project-summary" id="overview" aria-labelledby="overview-title">
+        <header>
+          <h2 id="overview-title">The research question</h2>
+          <p>How strongly does prescribed quadrotor motion affect visual–inertial estimation, and can predicted uncertainty inform trajectory planning?</p>
+        </header>
+        <div class="project-summary-body">
+          <div class="abstract-copy">
+            <h3>Abstract</h3>
+            <p>A visual–inertial navigation system estimates motion from cameras and an inertial measurement unit when external positioning is unavailable. Its performance can depend on the trajectory because motion changes both inertial excitation and the visual information available to the estimator.</p>
+            <p>First, four prescribed quadrotor trajectories were evaluated over 20 paired OpenVINS simulations. Oscillatory motion reduced mean reported position uncertainty by approximately 51% and mean translational error by approximately 73% against straight cruise in the primary monocular experiment. The effect was conditional: differences were small in the tested near-field stereo case but remained substantial with distant stereo landmarks.</p>
+            <p>Second, a reduced differentiable covariance model was embedded in a constrained trajectory optimisation. Additional permitted motion produced viewpoint-changing trajectories with the greatest predicted benefit under weak landmark geometry. These planner results are predictive; the submitted report did not establish improvement in realised estimation error.</p>
+          </div>
+          <div class="contribution-list">
+            <h3>Contributions</h3>
+            <ol>
+              <li>A controlled characterisation of motion-dependent OpenVINS error, reported covariance, and consistency across monocular and stereo sensing conditions.</li>
+              <li>A reduced differentiable EKF covariance rollout for nominal quadrotor trajectories, checked against a finer 400 Hz numerical reference.</li>
+              <li>A constrained optimisation study showing how permitted motion cost and landmark geometry change the predicted motion–uncertainty trade-off.</li>
+            </ol>
+            <dl class="report-details">
+              <div><dt>Degree</dt><dd>MSc Control and Optimisation</dd></div>
+              <div><dt>Department</dt><dd>Electrical and Electronic Engineering</dd></div>
+              <div><dt>Supervisor</dt><dd>Dr David Boyle</dd></div>
+              <div><dt>Institution</dt><dd>Imperial College London</dd></div>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <section class="report-results" id="report-results" aria-labelledby="report-results-title">
+        <header>
+          <h2 id="report-results-title">Results in the submitted report</h2>
+          <p>The report separates implemented-estimator evidence from reduced-model predictions. The first table summarises the primary OpenVINS experiment; the second summarises the planner at the largest tested motion allowance.</p>
+        </header>
+        <div class="report-result-grid">
+          <article>
+            <h3>Prescribed motion in OpenVINS</h3>
+            <p>Primary monocular condition, scored interval, 20 paired seeds. Reductions are relative to nominal cruise.</p>
+            <div class="table-scroll">
+              <table>
+                <thead><tr><th>Trajectory</th><th>Mean covariance</th><th>Mean ATE</th></tr></thead>
+                <tbody>
+                  <tr><th>Nominal cruise</th><td>0.1730 m²</td><td>0.6712 m</td></tr>
+                  <tr><th>Lateral excursion</th><td>0.1205 m² <small>−30.4%</small></td><td>0.3208 m <small>−52.2%</small></td></tr>
+                  <tr><th>Lateral oscillation</th><td>0.0855 m² <small>−50.6%</small></td><td>0.1826 m <small>−72.8%</small></td></tr>
+                  <tr><th>3D oscillation</th><td>0.0848 m² <small>−51.0%</small></td><td>0.1828 m <small>−72.8%</small></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+          <article>
+            <h3>Predicted planning trade-off</h3>
+            <p>Mean posterior horizontal-position covariance at ε = 3, permitting up to four times the motion-only cost.</p>
+            <div class="table-scroll">
+              <table>
+                <thead><tr><th>Landmarks</th><th>Motion-only</th><th>Reduction</th></tr></thead>
+                <tbody>
+                  <tr><th>Centred</th><td>0.292 m²</td><td>87.8%</td></tr>
+                  <tr><th>Left-offset</th><td>0.0804 m²</td><td>62.9%</td></tr>
+                  <tr><th>Left–right pair</th><td>0.0109 m²</td><td>20.4%</td></tr>
+                  <tr><th>Centre–left–right</th><td>0.00929 m²</td><td>22.1%</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+        </div>
+        <p class="report-evidence-note">All 28 centred and left-offset continuation solves succeeded in 0.128–0.384 seconds. The second-order covariance propagation reproduced the 400 Hz reference cost within 0.14%.</p>
+      </section>
+
       <!-- Temporarily disabled: uncertainty triangle
       <section class="uncertainty-story" aria-labelledby="uncertainty-title">
         <div class="uncertainty-copy">
@@ -229,7 +332,7 @@
       </section>
       -->
 
-      <section class="gps-denied" aria-labelledby="gps-denied-title">
+      <section class="gps-denied" id="background" aria-labelledby="gps-denied-title">
         <div class="gps-denied-copy">
           <h2 id="gps-denied-title">Dead reckoning: position from motion.</h2>
           <p>Each motion measurement advances the previous estimate. Small errors are integrated too, so uncertainty grows until another observation constrains it.</p>
@@ -287,10 +390,10 @@
         </div>
       </section>
 
-      <section class="feature-study" aria-labelledby="feature-study-title">
+      <section class="feature-study" id="observations" aria-labelledby="feature-study-title">
         <header class="feature-study-heading">
-          <h2 id="feature-study-title">What the camera sees</h2>
-          <p>Tracked features constrain that drift. Below, the same recorded observations appear in the fixed simulator map and image plane.</p>
+          <h2 id="feature-study-title">Motion-dependent estimation in OpenVINS</h2>
+          <p>The report compared four prescribed trajectories over 20 paired seeds. This interactive excerpt contrasts the nominal cruise and 3D oscillation recordings.</p>
         </header>
 
         <div class="feature-controls">
@@ -311,14 +414,14 @@
           </header>
           <div class="chase-grid">
             <article class="chase-case" data-chase="straight">
-              <header><h4>Less informative</h4><p>straight baseline</p></header>
+              <header><h4>Nominal cruise</h4><p>straight-flight reference</p></header>
               <div class="chase-viewport">
                 <canvas aria-label="Follow view of the straight baseline"></canvas>
                 <span class="chase-error"></span>
               </div>
             </article>
             <article class="chase-case" data-chase="weave_3d">
-              <header><h4>More informative</h4><p>3D oscillation</p></header>
+              <header><h4>3D oscillation</h4><p>oscillatory condition</p></header>
               <div class="chase-viewport">
                 <canvas aria-label="Follow view of the 3D oscillation"></canvas>
                 <span class="chase-error"></span>
@@ -330,10 +433,10 @@
         <p class="feature-method-note">Exact feature IDs emitted to OpenVINS; pixel positions reconstructed from the saved map, pose, and calibration.</p>
       </section>
 
-      <section class="optimizer-story" aria-labelledby="optimizer-title">
+      <section class="optimizer-story" id="experiment" aria-labelledby="optimizer-title">
         <header class="optimizer-heading">
           <h2 id="optimizer-title">What the optimizer sees</h2>
-          <p>The current five-second constrained plans from <code>run_landmark_experiment_simple.py</code>. More permitted motion changes the viewpoint, image projection, and predicted uncertainty.</p>
+          <p>The report’s five-second constrained planning study first solves a minimum-motion reference, then permits bounded extra motion. The selected viewpoint changes the image projection and predicted uncertainty.</p>
         </header>
 
         <div class="optimizer-settings">
@@ -377,10 +480,10 @@
           </div>
         </div>
 
-        <p class="optimizer-note"><span data-tex="inline">\text{predicted mean}=\text{nominal plan};\;\mathbf P\text{ changes}</span> Stored centred and left-landmark sweeps from the current report experiment. The controls select solved trajectories; they do not interpolate or rerun the optimiser.</p>
+        <p class="optimizer-note"><span data-tex="inline">\text{predicted mean}=\text{nominal plan};\;\mathbf P\text{ changes}</span> Stored centred and left-landmark sweeps from the submitted report. The controls select solved trajectories; they do not interpolate or rerun the optimiser.</p>
       </section>
 
-      <section class="formulation-story" aria-labelledby="formulation-title">
+      <section class="formulation-story" id="method" aria-labelledby="formulation-title">
         <header class="formulation-heading">
           <h2 id="formulation-title">The problem, as solved</h2>
           <p>The equations and limits below come from the current Python implementation. The optimisation acts on flat outputs; a differential-flatness lift supplies the physical quantities used by the estimator model.</p>
@@ -495,7 +598,30 @@
         <p class="formulation-source">Implemented in <code>trajectory.py</code>, <code>optimisation.py</code>, <code>belief.py</code>, and the explicit limits in <code>run_landmark_experiment_simple.py</code>.</p>
       </section>
 
-      <section class="validation-story" aria-labelledby="validation-title">
+      <section class="project-close" id="reproduce" aria-labelledby="reproduce-title">
+        <div class="project-close-grid">
+          <article>
+            <h2 id="reproduce-title">Reproduce and inspect</h2>
+            <p>This repository contains the interactive project page, saved experiment outputs, and scripts that convert those outputs into browser-ready datasets. Run the page locally with a static HTTP server; the visualisations do not rerun the optimiser.</p>
+            <pre><code>python3 -m http.server 8000
+# open http://localhost:8000</code></pre>
+            <p class="project-close-note">The planner and OpenVINS implementation is not bundled with this page repository. Until it is released, read this as an inspectable record of saved experiments rather than a complete reproduction package.</p>
+            <p class="resource-links"><a class="text-link" href="https://github.com/RyanSelesnik/Live-Reckoning">Page source</a> · <a class="text-link" href="https://github.com/RyanSelesnik/Live-Reckoning-Code">Report code repository</a></p>
+          </article>
+          <article>
+            <h2>Scope and limitations</h2>
+            <ul>
+              <li>The belief model assumes one known landmark is accepted at every update.</li>
+              <li>Future measurements use a zero-innovation maximum-likelihood observation assumption.</li>
+              <li>Snap, actuator dynamics, rotor thrust, body torque, and tracking error are not directly constrained.</li>
+              <li>The submitted report did not validate the planner against realised estimator error; the separate post-report study below begins that check.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="validation-story" id="results" aria-labelledby="validation-title">
+        <p class="post-report-note"><strong>Post-report validation.</strong> This 200-trial nonlinear EKF study was completed after the submitted MSc report and is not part of its original evidence.</p>
         <header class="validation-heading">
           <h2 id="validation-title">Does the prediction survive noise?</h2>
           <p>Centred landmark. Two hundred nonlinear EKF trials test the covariance predicted during planning.</p>
@@ -528,7 +654,41 @@
         </div>
 
         <p class="validation-note"><span><i class="validation-key realised"></i>200-trial MSE <i class="validation-key predicted"></i>planning covariance</span> Same simulated noise draws compare the saved plans fairly. This validates the reduced planning model, not OpenVINS.</p>
+
+        <div class="evidence-summary" aria-labelledby="evidence-summary-title">
+          <h3 id="evidence-summary-title">Post-report result, with its boundaries</h3>
+          <dl>
+            <div><dt>Comparator</dt><dd>The minimum-motion feasible plan under the same boundary and field-of-view constraints.</dd></div>
+            <div><dt>Headline case</dt><dd>Centred landmark, motion allowance 3, evaluated over five seconds.</dd></div>
+            <div><dt>Observed effect</dt><dd>Reported running horizontal MSE across the five-second horizon is 85% lower.</dd></div>
+            <div><dt>Consistency check</dt><dd>Mean horizontal NEES is 2.13 against the expected value of 2.</dd></div>
+            <div><dt>What this supports</dt><dd>The reduced covariance model ranks these saved plans meaningfully under matched simulated noise.</dd></div>
+            <div><dt>What it does not support</dt><dd>No claim of hardware performance, feature-discovery robustness, or end-to-end OpenVINS validation.</dd></div>
+          </dl>
+        </div>
+      </section>
+
+      <section class="citation-section" id="citation" aria-labelledby="citation-title">
+        <div>
+          <h2 id="citation-title">Citation</h2>
+          <p>Cite the submitted MSc thesis as:</p>
+        </div>
+        <pre><code>@mastersthesis{selesnik2026livereckoning,
+  author = {Ryan Selesnik},
+  title  = {Live Reckoning: Moving to Observe, Observing to be Sure --
+            Towards Estimation-Aware Trajectory Planning for
+            Visual--Inertial Navigation},
+  school = {Imperial College London},
+  type   = {MSc thesis},
+  year   = {2026}
+}</code></pre>
       </section>
     </main>
+
+    <footer class="site-footer">
+      <p>Live Reckoning · Ryan Selesnik · Imperial College London · 2026 · supervised by Dr David Boyle</p>
+      <p>Report content licensed <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a>. Recorded estimation uses <a href="https://docs.openvins.com/">OpenVINS</a>.</p>
+      <a href="#top">Back to top</a>
+    </footer>
   </body>
 </html>

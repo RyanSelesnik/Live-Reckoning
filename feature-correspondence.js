@@ -5,8 +5,8 @@
   if (!dataset) return;
 
   const cases = [
-    {key: "straight", title: "Less informative", subtitle: "straight baseline"},
-    {key: "weave_3d", title: "More informative", subtitle: "3D oscillation"}
+    {key: "straight", title: "Nominal cruise", subtitle: "straight-flight reference"},
+    {key: "weave_3d", title: "3D oscillation", subtitle: "oscillatory condition"}
   ];
   const highlight = ["#176f8a", "#b34a36", "#8a6b16"];
   const rows = document.querySelector("#feature-rows");
