@@ -13,7 +13,7 @@
     <title>Live Reckoning: Moving to Observe, Observing to be Sure</title>
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.18.7/dist/katex.min.css" integrity="sha384-JctiRyLzXCrSoOOzFlSoWLdyzQl7OrrRnhyeBmzB6ZWtcjccUyc8lCQJqIbs3uQX" crossorigin="anonymous">
-    <link rel="stylesheet" href="styles.css?v=20260922-body-axis">
+    <link rel="stylesheet" href="styles.css?v=20260922-hero-clarity">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.18.7/dist/katex.min.js" integrity="sha384-+7Keh381hSkXmXqnjC0JBM/kzsN6TFj+wMKychSLjTvJ8/0ElMde2uKl8i6p6Buj" crossorigin="anonymous"></script>
     <script defer src="math.js?v=20260914-katex-all-math"></script>
     <script src="motion-data.js" defer></script>
@@ -23,9 +23,9 @@
     <script src="diagram.js?v=20260922-editable-svg" defer></script>
     <!-- Temporarily disabled: <script src="uncertainty-triangle.js" defer></script> -->
     <script src="dead-reckoning.js" defer></script>
-    <script src="feature-correspondence.js" defer></script>
+    <script src="feature-correspondence.js?v=20260922-hero-follow" defer></script>
     <script src="vendor/three.min.js" defer></script>
-    <script src="chase-view.js" defer></script>
+    <script src="chase-view.js?v=20260922-hero-clarity" defer></script>
     <script src="optimization-view.js?v=20260913-formulation-2" defer></script>
     <script src="monte-carlo-view.js?v=20260913-formulation-2" defer></script>
   </head>
@@ -50,28 +50,61 @@
             <h1 id="hero-title">Live Reckoning</h1>
             <p class="hero-subtitle">Moving to Observe, Observing to be Sure.</p>
             <p class="hero-deck">Towards estimation-aware trajectory planning for visual–inertial navigation.</p>
-            <p class="hero-byline"><a href="https://github.com/RyanSelesnik">Ryan Selesnik</a> · MSc Control and Optimisation · Imperial College London · 2026</p>
-          </div>
-          <div class="hero-introduction">
-            <p class="hero-description">Two linked studies ask how strongly quadrotor motion changes visual–inertial estimation, and whether predicted uncertainty can guide the choice of trajectory.</p>
-            <p class="hero-supervisor">Supervised by Dr David Boyle</p>
-            <div class="hero-links" aria-label="Project resources">
-              <a href="https://github.com/RyanSelesnik/Live-Reckoning">Source</a>
-              <a href="#observations">OpenVINS study</a>
-              <a href="#experiment">Planning study</a>
-              <a href="#citation">BibTeX</a>
-            </div>
           </div>
         </div>
 
+        <div class="chase-study hero-chase" aria-label="Recorded OpenVINS follow views">
+          <header class="chase-heading">
+            <h2>Same estimator. Different motion.</h2>
+            <p>Follow one recorded run in each view. Dark traces show simulator truth; blue traces show the OpenVINS estimate.</p>
+          </header>
+          <div class="chase-grid">
+            <article class="chase-case" data-chase="straight">
+              <header><h3>Nominal cruise</h3><p>straight-flight reference</p></header>
+              <div class="chase-viewport">
+                <canvas aria-label="Follow view of the straight baseline"></canvas>
+                <span class="chase-error"></span>
+              </div>
+            </article>
+            <article class="chase-case" data-chase="weave_3d">
+              <header><h3>3D oscillation</h3><p>oscillatory condition</p></header>
+              <div class="chase-viewport">
+                <canvas aria-label="Follow view of the 3D oscillation"></canvas>
+                <span class="chase-error"></span>
+              </div>
+            </article>
+          </div>
+          <div class="hero-chase-controls">
+            <button id="hero-feature-play" type="button" aria-label="Pause 3D playback">Pause</button>
+            <label for="hero-feature-time">Scrub the recorded run</label>
+            <input id="hero-feature-time" type="range" min="8" max="41.3" step="0.01" value="8">
+            <output id="hero-feature-clock" for="hero-feature-time">8.0 s</output>
+          </div>
+          <p class="chase-key"><i class="truth-key"></i>truth <i class="estimate-key"></i>estimate <i class="covariance-key"></i>95% position covariance</p>
+          <p class="chase-qualification">The numbers in the views are instantaneous gaps from one run. The study result below averages whole trajectories over 20 paired runs.</p>
+        </div>
+
         <aside class="headline-result" aria-label="Headline experimental result">
-          <p><strong>73% lower position error</strong> for oscillatory motion than straight cruise in the primary OpenVINS experiment.</p>
+          <p><strong>72.8% lower mean position error</strong> for 3D oscillation than nominal cruise: 0.6712 m → 0.1828 m.</p>
           <dl>
             <div><dt>experiment</dt><dd>20 paired monocular simulations</dd></div>
             <div><dt>reported uncertainty</dt><dd>approximately 51% lower</dd></div>
             <div><dt>planning result</dt><dd>up to 87.8% lower predicted cost</dd></div>
           </dl>
         </aside>
+
+        <div class="hero-introduction">
+          <p class="hero-description">Two linked studies ask how strongly quadrotor motion changes visual–inertial estimation, and whether predicted uncertainty can guide the choice of trajectory.</p>
+          <p class="hero-supervisor">Supervised by Dr David Boyle</p>
+          <div class="hero-links" aria-label="Project resources">
+            <a href="https://github.com/RyanSelesnik/Live-Reckoning-Code">Research code</a>
+            <a href="https://github.com/RyanSelesnik/Live-Reckoning">Page source</a>
+            <a href="#observations">OpenVINS study</a>
+            <a href="#experiment">Planning study</a>
+            <a href="#citation">BibTeX</a>
+          </div>
+          <p class="hero-byline"><a href="https://github.com/RyanSelesnik">Ryan Selesnik</a> · MSc Control and Optimisation · Imperial College London · 2026</p>
+        </div>
 
         <figure class="diagram-frame" id="system-figure" data-focus="all">
           <div class="diagram-tools" aria-label="Highlight a sensing path">
@@ -286,29 +319,6 @@
         </div>
         <div id="feature-rows"></div>
 
-        <div class="chase-study">
-          <header class="chase-heading">
-            <h3>Follow view</h3>
-            <p>Truth, OpenVINS estimate, visible landmarks, and recorded 95% position covariance.</p>
-          </header>
-          <div class="chase-grid">
-            <article class="chase-case" data-chase="straight">
-              <header><h4>Nominal cruise</h4><p>straight-flight reference</p></header>
-              <div class="chase-viewport">
-                <canvas aria-label="Follow view of the straight baseline"></canvas>
-                <span class="chase-error"></span>
-              </div>
-            </article>
-            <article class="chase-case" data-chase="weave_3d">
-              <header><h4>3D oscillation</h4><p>oscillatory condition</p></header>
-              <div class="chase-viewport">
-                <canvas aria-label="Follow view of the 3D oscillation"></canvas>
-                <span class="chase-error"></span>
-              </div>
-            </article>
-          </div>
-          <p class="chase-key"><i class="truth-key"></i>truth <i class="estimate-key"></i>estimate <i class="covariance-key"></i>95% position covariance</p>
-        </div>
         <p class="feature-method-note">Exact feature IDs emitted to OpenVINS; pixel positions reconstructed from the saved map, pose, and calibration.</p>
       </section>
 
@@ -334,8 +344,8 @@
 
         <div class="optimizer-control">
           <label for="optimizer-allowance">motion allowance</label>
-          <input id="optimizer-allowance" type="range" min="0" max="14" step="1" value="0">
-          <output id="optimizer-allowance-value" for="optimizer-allowance">motion-only</output>
+          <input id="optimizer-allowance" type="range" min="0" max="14" step="1" value="5">
+          <output id="optimizer-allowance-value" for="optimizer-allowance">ε = 0.2</output>
         </div>
 
         <div class="optimizer-layout">

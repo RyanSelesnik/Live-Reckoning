@@ -51,13 +51,13 @@ function bodyMarker(color, opacity = 1) {
   const group = new THREE.Group();
   const geometry = new THREE.BufferGeometry();
   geometry.setAttribute("position", new THREE.Float32BufferAttribute([
-    -.22, 0, 0, .22, 0, 0,
-    0, -.22, 0, 0, .22, 0,
-    0, 0, 0, .28, 0, 0
+    -.30, 0, 0, .30, 0, 0,
+    0, -.30, 0, 0, .30, 0,
+    0, 0, 0, .38, 0, 0
   ], 3));
   group.add(new THREE.LineSegments(geometry, new THREE.LineBasicMaterial({color, transparent: opacity < 1, opacity, depthTest: false})));
   group.add(new THREE.Mesh(
-    new THREE.RingGeometry(.055, .082, 20),
+    new THREE.RingGeometry(.075, .108, 20),
     new THREE.MeshBasicMaterial({color, side: THREE.DoubleSide, transparent: opacity < 1, opacity, depthTest: false})
   ));
   return group;
@@ -100,36 +100,36 @@ function makeView(element) {
   cloudGeometry.setAttribute("position", new THREE.Float32BufferAttribute(experiment.landmarks.flat(), 3));
   scene.add(new THREE.Points(cloudGeometry, new THREE.PointsMaterial({color: 0x778187, size: .045, transparent: true, opacity: .25, sizeAttenuation: true})));
 
-  const truthFull = lineObject(positions(frames, "truth"), 0x9ca4a8, .27);
+  const truthFull = lineObject(positions(frames, "truth"), 0x78878e, .4);
   const truthPast = lineObject(positions(frames, "truth"), 0x182126, 1);
   const estimatePast = lineObject(positions(frames, "estimate"), 0x426b78, .94);
   scene.add(truthFull, truthPast, estimatePast);
 
   const truthBody = bodyMarker(0x182126);
   const estimateBody = bodyMarker(0x426b78, .85);
-  estimateBody.scale.setScalar(.72);
+  estimateBody.scale.setScalar(.82);
   scene.add(truthBody, estimateBody);
 
   const covariance = new THREE.Mesh(
     new THREE.SphereGeometry(1, 16, 10),
-    new THREE.MeshBasicMaterial({color: 0x426b78, wireframe: true, transparent: true, opacity: .24})
+    new THREE.MeshBasicMaterial({color: 0x426b78, wireframe: true, transparent: true, opacity: .4})
   );
   scene.add(covariance);
 
   const activeGeometry = new THREE.BufferGeometry();
   activeGeometry.setAttribute("position", new THREE.BufferAttribute(new Float32Array(30), 3));
   activeGeometry.setDrawRange(0, 0);
-  const activePoints = new THREE.Points(activeGeometry, new THREE.PointsMaterial({color: 0x59696f, size: .14, sizeAttenuation: true}));
+  const activePoints = new THREE.Points(activeGeometry, new THREE.PointsMaterial({color: 0x59696f, size: .18, sizeAttenuation: true}));
   scene.add(activePoints);
 
   const highlights = highlightColors.map(color => {
-    const marker = new THREE.Mesh(new THREE.SphereGeometry(.105, 10, 7), new THREE.MeshBasicMaterial({color}));
+    const marker = new THREE.Mesh(new THREE.SphereGeometry(.13, 10, 7), new THREE.MeshBasicMaterial({color}));
     scene.add(marker); return marker;
   });
   const rayGeometry = new THREE.BufferGeometry();
   rayGeometry.setAttribute("position", new THREE.BufferAttribute(new Float32Array(18), 3));
   rayGeometry.setDrawRange(0, 6);
-  const rays = new THREE.LineSegments(rayGeometry, new THREE.LineBasicMaterial({color: 0x71858c, transparent: true, opacity: .27}));
+  const rays = new THREE.LineSegments(rayGeometry, new THREE.LineBasicMaterial({color: 0x71858c, transparent: true, opacity: .4}));
   scene.add(rays);
 
   const rotationMatrix = new THREE.Matrix4();
@@ -174,7 +174,7 @@ function makeView(element) {
       0, 0, 0, 1
     );
     covariance.quaternion.setFromRotationMatrix(rotationMatrix);
-    errorLabel.textContent = `|e| ${truthPosition.distanceTo(estimatePosition).toFixed(3)} m`;
+    errorLabel.textContent = `Current gap ${truthPosition.distanceTo(estimatePosition).toFixed(3)} m`;
 
     const featureIndex = nearest(motion.featureTimes, time);
     const currentFeatures = motion.features[featureIndex];

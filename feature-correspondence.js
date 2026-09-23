@@ -13,8 +13,21 @@
   const slider = document.querySelector("#feature-time");
   const clock = document.querySelector("#feature-clock");
   const play = document.querySelector("#feature-play");
+  const heroSlider = document.querySelector("#hero-feature-time");
+  const heroClock = document.querySelector("#hero-feature-clock");
+  const heroPlay = document.querySelector("#hero-feature-play");
   let playing = !matchMedia("(prefers-reduced-motion: reduce)").matches;
   let previous = performance.now();
+
+  function setPlaying(value) {
+    playing = value;
+    play.textContent = value ? "Pause" : "Play";
+    play.setAttribute("aria-label", `${value ? "Pause" : "Play"} feature playback`);
+    if (heroPlay) {
+      heroPlay.textContent = value ? "Pause" : "Play";
+      heroPlay.setAttribute("aria-label", `${value ? "Pause" : "Play"} 3D playback`);
+    }
+  }
 
   const nearest = (values, time) => {
     let lo = 0, hi = values.length - 1;
@@ -142,6 +155,8 @@
   function draw() {
     const time = Number(slider.value);
     clock.value = `${time.toFixed(1)} s`;
+    if (heroSlider) heroSlider.value = slider.value;
+    if (heroClock) heroClock.value = clock.value;
     for (const item of cases) {
       const frame = nearest(item.motion.featureTimes, time);
       const selected = persistentFeatures(item.motion, frame);
@@ -160,12 +175,15 @@
     previous = now; requestAnimationFrame(animate);
   }
 
-  play.addEventListener("click", () => {
-    playing = !playing;
-    play.textContent = playing ? "Pause" : "Play";
-    play.setAttribute("aria-label", `${playing ? "Pause" : "Play"} feature playback`);
+  play.addEventListener("click", () => setPlaying(!playing));
+  heroPlay?.addEventListener("click", () => setPlaying(!playing));
+  slider.addEventListener("input", () => { setPlaying(false); draw(); });
+  heroSlider?.addEventListener("input", () => {
+    slider.value = heroSlider.value;
+    setPlaying(false);
+    draw();
   });
-  slider.addEventListener("input", () => { playing = false; play.textContent = "Play"; draw(); });
   addEventListener("resize", draw);
+  setPlaying(playing);
   build(); draw(); requestAnimationFrame(animate);
 })();
